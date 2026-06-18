@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['user_id', 'transaction_code', 'transaction_date', 'total_amount', 'payment_method', 'status'])]
+#[Fillable(['tanggal', 'jenis_transaksi', 'description', 'total_harga', 'user_id', 'product_id'])]
 class Transaction extends Model
 {
     /**
@@ -18,13 +18,13 @@ class Transaction extends Model
     protected function casts(): array
     {
         return [
-            'transaction_date' => 'datetime',
-            'total_amount' => 'decimal:2',
+            'tanggal' => 'date',
+            'total_harga' => 'decimal:2',
         ];
     }
 
     /**
-     * User (admin/kasir) yang membuat transaksi ini.
+     * User (admin/staf) yang mencatat transaksi ini.
      */
     public function user(): BelongsTo
     {
@@ -32,7 +32,15 @@ class Transaction extends Model
     }
 
     /**
-     * Seluruh baris detail produk dalam transaksi ini.
+     * Produk utama yang terkait transaksi ini (boleh kosong untuk expense non-produk).
+     */
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    /**
+     * Seluruh baris rincian produk dalam transaksi ini (jika transaksi memuat banyak produk).
      */
     public function details(): HasMany
     {

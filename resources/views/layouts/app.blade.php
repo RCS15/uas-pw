@@ -91,10 +91,10 @@
                     <div class="relative">
                         <button id="btn-profile-dropdown" class="flex items-center gap-2 p-1.5 rounded-full hover:bg-gray-50 focus:outline-none transition-colors duration-150">
                             <div class="w-8 h-8 rounded-full bg-emerald-700 text-white font-bold flex items-center justify-center text-xs shadow-inner">
-                                {{ request()->is('admin*') ? 'AD' : 'SK' }}
+                                {{ strtoupper(substr(auth()->user()->name ?? (request()->is('admin*') ? 'AD' : 'SK'), 0, 2)) }}
                             </div>
                             <span class="hidden md:inline text-sm font-semibold text-gray-700">
-                                {{ request()->is('admin*') ? 'Admin Keuangan' : 'Staf Kasir 1' }}
+                                {{ auth()->user()->name ?? (request()->is('admin*') ? 'Admin Keuangan' : 'Staf Kasir 1') }}
                             </span>
                             <svg class="hidden md:block w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -105,7 +105,7 @@
                         <div id="profile-dropdown-menu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl shadow-gray-200/50 py-1.5 z-40 transform scale-95 opacity-0 pointer-events-none transition-all duration-150 origin-top-right">
                             <div class="px-4 py-2 border-b border-gray-50 lg:hidden">
                                 <p class="text-xs font-semibold text-emerald-600 uppercase">{{ request()->is('admin*') ? 'Admin Role' : 'Staff Role' }}</p>
-                                <p class="text-sm font-bold text-gray-800 truncate">{{ request()->is('admin*') ? 'Admin Keuangan' : 'Staf Kasir 1' }}</p>
+                                <p class="text-sm font-bold text-gray-800 truncate">{{ auth()->user()->name ?? (request()->is('admin*') ? 'Admin Keuangan' : 'Staf Kasir 1') }}</p>
                             </div>
                             
                             <a href="{{ request()->is('admin*') ? route('admin.dashboard') : route('nonadmin.dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 font-medium transition-colors">
@@ -124,12 +124,15 @@
 
                             <div class="border-t border-gray-50 my-1"></div>
                             
-                            <a href="{{ route('auth.login') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                                </svg>
-                                Keluar Aplikasi
-                            </a>
+                            <form action="{{ route('logout') }}" method="POST" class="block">
+                                @csrf
+                                <button type="submit" class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors text-left">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    Keluar Aplikasi
+                                </button>
+                            </form>
                         </div>
                     </div>
 

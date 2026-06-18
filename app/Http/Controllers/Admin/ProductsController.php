@@ -29,7 +29,7 @@ class ProductsController extends Controller
     public function create(): View
     {
         return view('admin.products.form', [
-            'categories' => Category::orderBy('name')->get(),
+            'categories' => Category::orderBy('nama_kategori')->get(),
         ]);
     }
 
@@ -53,7 +53,7 @@ class ProductsController extends Controller
     {
         return view('admin.products.form', [
             'product' => $product,
-            'categories' => Category::orderBy('name')->get(),
+            'categories' => Category::orderBy('nama_kategori')->get(),
         ]);
     }
 
@@ -62,7 +62,7 @@ class ProductsController extends Controller
      */
     public function update(Request $request, Product $product): RedirectResponse
     {
-        $validated = $this->validateProduct($request, $product);
+        $validated = $this->validateProduct($request);
 
         $product->update($validated);
 
@@ -75,7 +75,7 @@ class ProductsController extends Controller
      */
     public function destroy(Product $product): RedirectResponse
     {
-        if ($product->transactionDetails()->exists()) {
+        if ($product->transactionDetails()->exists() || $product->transactions()->exists()) {
             return redirect()->route('admin.products.index')
                 ->with('error', 'Produk tidak bisa dihapus karena sudah memiliki riwayat transaksi.');
         }
@@ -91,19 +91,13 @@ class ProductsController extends Controller
      *
      * @return array<string, mixed>
      */
-    private function validateProduct(Request $request, ?Product $product = null): array
+    private function validateProduct(Request $request): array
     {
         return $request->validate([
             'category_id' => ['required', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'sku' => [
-                'required', 'string', 'max:100',
-                'unique:products,sku,'.($product?->id ?? 'NULL').',id',
-            ],
-            'stock' => ['required', 'integer', 'min:0'],
-            'purchase_price' => ['required', 'numeric', 'min:0'],
-            'selling_price' => ['required', 'numeric', 'min:0'],
-            'description' => ['nullable', 'string'],
+            'nama_barang' => ['required', 'string', 'max:100'],
+            'harga' => ['required', 'numeric', 'min:0'],
+            'stok' => ['required', 'integer', 'min:0'],
         ]);
     }
 }

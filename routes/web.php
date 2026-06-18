@@ -1,204 +1,105 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\ProductsController as AdminProductsController;
+use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
+use App\Http\Controllers\Admin\TransactionsController as AdminTransactionsController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\NonAdmin\DashboardController as NonAdminDashboardController;
+use App\Http\Controllers\NonAdmin\ProductsController as NonAdminProductsController;
+use App\Http\Controllers\NonAdmin\ReportsController as NonAdminReportsController;
+use App\Http\Controllers\NonAdmin\TransactionsController as NonAdminTransactionsController;
 use Illuminate\Support\Facades\Route;
 
-// Datasets Mock untuk visualisasi data
-$categories = [
-    ['id' => 1, 'name' => 'Penjualan Produk', 'type' => 'income', 'description' => 'Hasil penjualan barang dagangan UMKM'],
-    ['id' => 2, 'name' => 'Pendapatan Jasa', 'type' => 'income', 'description' => 'Pendapatan dari layanan/reparasi/layanan lainnya'],
-    ['id' => 3, 'name' => 'Bahan Baku', 'type' => 'expense', 'description' => 'Pembelian bahan mentah kopi, gula, kemasan, dll'],
-    ['id' => 4, 'name' => 'Gaji Karyawan', 'type' => 'expense', 'description' => 'Beban gaji staf operasional bulanan'],
-    ['id' => 5, 'name' => 'Operasional Toko', 'type' => 'expense', 'description' => 'Listrik, air, sewa tempat, internet, dll'],
-];
+/*
+|--------------------------------------------------------------------------
+| RUTE AUTENTIKASI (AUTH)
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [LoginController::class, 'showLoginForm'])->name('auth.login');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-$products = [
-    [
-        'id' => 1, 
-        'name' => 'Kopi Arabika Lintong 250gr', 
-        'price' => 85000, 
-        'stock' => 15, 
-        'category_name' => 'Minuman', 
-        'category' => ['name' => 'Minuman'],
-        'description' => 'Biji kopi arabika pilihan dari daerah Lintong, Sumatera Utara. Memiliki rasa strong woody dan aroma rempah khas.'
-    ],
-    [
-        'id' => 2, 
-        'name' => 'Kopi Robusta Temanggung 250gr', 
-        'price' => 45000, 
-        'stock' => 8, 
-        'category_name' => 'Minuman',
-        'category' => ['name' => 'Minuman'],
-        'description' => 'Kopi robusta Temanggung bercita rasa nutty dan chocolatey. Sangat cocok untuk kopi susu kekinian.'
-    ],
-    [
-        'id' => 3, 
-        'name' => 'Gula Pasir Kristal Putih 1kg', 
-        'price' => 18000, 
-        'stock' => 0, 
-        'category_name' => 'Bahan Baku',
-        'category' => ['name' => 'Bahan Baku'],
-        'description' => 'Gula pasir kristal premium berkualitas tinggi sebagai bahan pemanis utama.'
-    ],
-    [
-        'id' => 4, 
-        'name' => 'Susu UHT Full Cream 1L', 
-        'price' => 21000, 
-        'stock' => 32, 
-        'category_name' => 'Bahan Baku',
-        'category' => ['name' => 'Bahan Baku'],
-        'description' => 'Susu cair UHT berkualitas tinggi untuk campuran latte, cappucino, dan minuman kopi susu.'
-    ],
-];
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('auth.register');
+Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
-$transactions = [
-    ['id' => 1, 'date' => '2026-06-17 09:30:00', 'description' => 'Penjualan Kopi Arabika Lintong', 'type' => 'income', 'amount' => 170000, 'category_id' => 1, 'category' => ['name' => 'Penjualan Produk']],
-    ['id' => 2, 'date' => '2026-06-17 10:15:00', 'description' => 'Pembelian Susu UHT 2 Karton', 'type' => 'expense', 'amount' => 504000, 'category_id' => 3, 'category' => ['name' => 'Bahan Baku']],
-    ['id' => 3, 'date' => '2026-06-16 14:00:00', 'description' => 'Penerimaan Pelunasan Piutang Warung Bu Ani', 'type' => 'income', 'amount' => 2150000, 'category_id' => 2, 'category' => ['name' => 'Pendapatan Jasa']],
-    ['id' => 4, 'date' => '2026-06-15 17:30:00', 'description' => 'Bayar Tagihan Listrik Toko', 'type' => 'expense', 'amount' => 850000, 'category_id' => 5, 'category' => ['name' => 'Operasional Toko']],
-    ['id' => 5, 'date' => '2026-06-14 11:00:00', 'description' => 'Penjualan Kopi & Roti Bakar', 'type' => 'income', 'amount' => 320000, 'category_id' => 1, 'category' => ['name' => 'Penjualan Produk']],
-];
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 
-$users = [
-    ['id' => 1, 'name' => 'Admin Keuangan', 'email' => 'admin@finbiz.com', 'role' => 'admin', 'created_at' => '2026-01-10 10:00:00'],
-    ['id' => 2, 'name' => 'Staf Kasir 1', 'email' => 'kasir@finbiz.com', 'role' => 'staff', 'created_at' => '2026-02-15 08:30:00'],
-];
+/*
+|--------------------------------------------------------------------------
+| GRUP RUTE ADMIN
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
 
-// RUTE AUTENTIKASI (AUTH)
-Route::get('/', function () {
-    return view('auth.login');
-})->name('auth.login');
+    // Dashboard
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('auth.register');
+    // CRUD Transaksi
+    Route::get('/transactions', [AdminTransactionsController::class, 'index'])->name('transactions.index');
+    Route::get('/transactions/create', [AdminTransactionsController::class, 'create'])->name('transactions.create');
+    Route::post('/transactions', [AdminTransactionsController::class, 'store'])->name('transactions.store');
+    Route::get('/transactions/{transaction}/edit', [AdminTransactionsController::class, 'edit'])->name('transactions.edit');
+    Route::put('/transactions/{transaction}', [AdminTransactionsController::class, 'update'])->name('transactions.update');
+    Route::delete('/transactions/{transaction}', [AdminTransactionsController::class, 'destroy'])->name('transactions.destroy');
 
+    // Laporan Keuangan
+    Route::get('/reports/profit-loss', [AdminReportsController::class, 'profitLoss'])->name('reports.profit-loss');
+    Route::get('/reports/cash-flow', [AdminReportsController::class, 'cashFlow'])->name('reports.cash-flow');
 
-// GRUP RUTE ADMIN (ADMIN PANEL)
-Route::prefix('admin')->name('admin.')->group(function () use ($categories, $products, $transactions, $users) {
-    
-    // Dashboard Admin
-    Route::get('/dashboard', function () use ($transactions) {
-        return view('admin.dashboard', [
-            'recent_transactions' => array_slice($transactions, 0, 3)
-        ]);
-    })->name('dashboard');
+    // CRUD Pengguna
+    Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');
+    Route::post('/users', [UsersController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UsersController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('users.destroy');
 
-    // Manajemen Transaksi Admin
-    Route::get('/transactions', function () use ($transactions, $categories) {
-        return view('admin.transactions.index', [
-            'transactions' => $transactions,
-            'categories' => $categories
-        ]);
-    })->name('transactions.index');
+    // CRUD Produk
+    Route::get('/products', [AdminProductsController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [AdminProductsController::class, 'create'])->name('products.create');
+    Route::post('/products', [AdminProductsController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [AdminProductsController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [AdminProductsController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [AdminProductsController::class, 'destroy'])->name('products.destroy');
 
-    Route::get('/transactions/create', function () use ($categories) {
-        return view('admin.transactions.form', [
-            'categories' => $categories
-        ]);
-    })->name('transactions.create');
-
-    Route::get('/transactions/{id}/edit', function ($id) use ($transactions, $categories) {
-        $transaction = collect($transactions)->firstWhere('id', (int)$id) ?? $transactions[0];
-        return view('admin.transactions.form', [
-            'transaction' => $transaction,
-            'categories' => $categories
-        ]);
-    })->name('transactions.edit');
-
-    // Laporan Keuangan Admin
-    Route::get('/reports/profit-loss', function () {
-        return view('admin.reports.profit-loss');
-    })->name('reports.profit-loss');
-
-    Route::get('/reports/cash-flow', function () {
-        return view('admin.reports.cash-flow');
-    })->name('reports.cash-flow');
-
-    Route::get('/reports/receivables', function () {
-        return view('admin.reports.receivables');
-    })->name('reports.receivables');
-
-    // Manajemen Pengguna Admin
-    Route::get('/users', function () use ($users) {
-        return view('admin.users.index', ['users' => $users]);
-    })->name('users.index');
-
-    Route::get('/users/create', function () {
-        return view('admin.users.form');
-    })->name('users.create');
-
-    Route::get('/users/{id}/edit', function ($id) use ($users) {
-        $user = collect($users)->firstWhere('id', (int)$id) ?? $users[0];
-        return view('admin.users.form', ['user' => $user]);
-    })->name('users.edit');
-
-    // Manajemen Produk Admin
-    Route::get('/products', function () use ($products) {
-        return view('admin.products.index', ['products' => $products]);
-    })->name('products.index');
-
-    Route::get('/products/create', function () {
-        return view('admin.products.form');
-    })->name('products.create');
-
-    Route::get('/products/{id}/edit', function ($id) use ($products) {
-        $product = collect($products)->firstWhere('id', (int)$id) ?? $products[0];
-        return view('admin.products.form', ['product' => $product]);
-    })->name('products.edit');
-
-    // Manajemen Kategori Admin
-    Route::get('/categories', function () use ($categories) {
-        return view('admin.categories.index', ['categories' => $categories]);
-    })->name('categories.index');
-
-    Route::get('/categories/create', function () {
-        return view('admin.categories.form');
-    })->name('categories.create');
-
-    Route::get('/categories/{id}/edit', function ($id) use ($categories) {
-        $category = collect($categories)->firstWhere('id', (int)$id) ?? $categories[0];
-        return view('admin.categories.form', ['category' => $category]);
-    })->name('categories.edit');
+    // CRUD Kategori
+    Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [CategoriesController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategoriesController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{category}/edit', [CategoriesController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{category}', [CategoriesController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 });
 
+/*
+|--------------------------------------------------------------------------
+| GRUP RUTE NON-ADMIN (STAF / KASIR)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('nonadmin')->name('nonadmin.')->middleware(['auth', 'role:nonadmin'])->group(function () {
 
-// GRUP RUTE NON-ADMIN (STAFF / KASIR)
-Route::prefix('staff')->name('nonadmin.')->group(function () use ($categories, $products, $transactions) {
-    
-    // Dashboard Kasir
-    Route::get('/dashboard', function () use ($transactions, $products) {
-        $sales = array_filter($transactions, fn($t) => $t['type'] === 'income');
-        return view('nonadmin.dashboard', [
-            'recent_sales' => array_slice($sales, 0, 3),
-            'popular_products' => array_slice($products, 0, 3),
-        ]);
-    })->name('dashboard');
+    // Dashboard
+    Route::get('/dashboard', [NonAdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Input Transaksi Kasir
-    Route::get('/transactions/create', function () use ($categories) {
-        return view('nonadmin.transactions.create', ['categories' => $categories]);
-    })->name('transactions.create');
+    // Transaksi (catat & riwayat milik sendiri)
+    Route::get('/transactions/create', [NonAdminTransactionsController::class, 'create'])->name('transactions.create');
+    Route::post('/transactions', [NonAdminTransactionsController::class, 'store'])->name('transactions.store');
+    Route::get('/transactions/history', [NonAdminTransactionsController::class, 'history'])->name('transactions.history');
 
-    // Riwayat Transaksi Kasir
-    Route::get('/transactions/history', function () use ($transactions) {
-        $sales = array_filter($transactions, fn($t) => $t['type'] === 'income');
-        return view('nonadmin.transactions.history', [
-            'sales_history' => $sales
-        ]);
-    })->name('transactions.history');
+    // Katalog Produk (lihat saja)
+    Route::get('/products', [NonAdminProductsController::class, 'index'])->name('products.index');
+    Route::get('/products/{product}', [NonAdminProductsController::class, 'show'])->name('products.show');
 
-    // Katalog Produk Kasir
-    Route::get('/products', function () use ($products) {
-        return view('nonadmin.products.index', ['products' => $products]);
-    })->name('products.index');
-
-    Route::get('/products/{id}', function ($id) use ($products) {
-        $product = collect($products)->firstWhere('id', (int)$id) ?? $products[0];
-        return view('nonadmin.products.show', ['product' => $product]);
-    })->name('products.show');
-
-    // Laporan Harian Kasir
-    Route::get('/reports/daily', function () {
-        return view('nonadmin.reports.daily');
-    })->name('reports.daily');
+    // Laporan Harian
+    Route::get('/reports/daily', [NonAdminReportsController::class, 'daily'])->name('reports.daily');
 });

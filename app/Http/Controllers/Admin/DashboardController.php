@@ -14,32 +14,22 @@ class DashboardController extends Controller
      */
     public function index(): View
     {
-        $totalPendapatan = (float) Transaction::where('status', 'paid')->sum('total_amount');
+        $totalPendapatan = (float) Transaction::where('jenis_transaksi', 'income')->sum('total_harga');
+        $totalPengeluaran = (float) Transaction::where('jenis_transaksi', 'expense')->sum('total_harga');
+        $labaBersih = $totalPendapatan - $totalPengeluaran;
 
-        $totalModal = (float) Transaction::where('status', 'paid')
-            ->with('details')
-            ->get()
-            ->flatMap(fn (Transaction $t) => $t->details)
-            ->sum(function ($detail) {
-                return $detail->quantity * (float) $detail->product?->purchase_price;
-            });
-
-        $labaBersih = $totalPendapatan - $totalModal;
-
-        $totalPiutang = (float) Transaction::whereIn('status', ['unpaid', 'pending'])->sum('total_amount');
-
-        $recentTransactions = Transaction::with(['user', 'details.product'])
-            ->latest('transaction_date')
+        $recentTransactions = Transaction::with(['user', 'product'])
+            ->latest('tanggal')
+            ->latest('id')
             ->take(5)
             ->get();
 
-        $lowStockCount = Product::where('stock', '<', 10)->count();
+        $lowStockCount = Product::where('stok', '<', 10)->count();
 
         return view('admin.dashboard', [
             'total_pendapatan' => $totalPendapatan,
-            'total_modal' => $totalModal,
+            'total_pengeluaran' => $totalPengeluaran,
             'laba_bersih' => $labaBersih,
-            'total_piutang' => $totalPiutang,
             'recent_transactions' => $recentTransactions,
             'low_stock_count' => $lowStockCount,
         ]);

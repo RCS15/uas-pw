@@ -108,14 +108,15 @@
     <div class="p-4 border-t border-gray-50 bg-gray-50/50">
         <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-sm shadow-sm">
-                AD
+                {{ strtoupper(substr(auth()->user()->name ?? 'AD', 0, 2)) }}
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-semibold text-gray-800 truncate">Admin Keuangan</p>
-                <p class="text-[11px] text-gray-500 truncate">admin@finbiz.com</p>
+                <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name ?? 'Admin Keuangan' }}</p>
+                <p class="text-[11px] text-gray-500 truncate">{{ auth()->user()->email ?? 'admin@example.com' }}</p>
             </div>
         </div>
-        <form action="{{ route('auth.login') }}" method="GET">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
             <button type="submit" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-white border border-gray-200 hover:border-red-200 text-gray-600 hover:text-red-600 rounded-xl text-sm font-medium transition-all duration-150 shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>

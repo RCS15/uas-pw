@@ -4,106 +4,94 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class ProductsController extends Controller
+class CategoriesController extends Controller
 {
     /**
-     * Tampilkan katalog seluruh produk.
+     * Tampilkan daftar seluruh kategori.
      */
     public function index(): View
     {
-        $products = Product::with('category')->latest()->get();
+        $categories = Category::withCount('products')->latest()->get();
 
-        return view('admin.products.index', [
-            'products' => $products,
+        return view('admin.categories.index', [
+            'categories' => $categories,
         ]);
     }
 
     /**
-     * Tampilkan form tambah produk baru.
+     * Tampilkan form tambah kategori baru.
      */
     public function create(): View
     {
-        return view('admin.products.form', [
-            'categories' => Category::orderBy('name')->get(),
-        ]);
+        return view('admin.categories.form');
     }
 
     /**
-     * Simpan produk baru ke database.
+     * Simpan kategori baru ke database.
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $this->validateProduct($request);
+        $validated = $this->validateCategory($request);
 
-        Product::create($validated);
+        Category::create($validated);
 
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Produk baru berhasil ditambahkan.');
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Kategori baru berhasil ditambahkan.');
     }
 
     /**
-     * Tampilkan form edit produk.
+     * Tampilkan form edit kategori.
      */
-    public function edit(Product $product): View
+    public function edit(Category $category): View
     {
-        return view('admin.products.form', [
-            'product' => $product,
-            'categories' => Category::orderBy('name')->get(),
+        return view('admin.categories.form', [
+            'category' => $category,
         ]);
     }
 
     /**
-     * Perbarui data produk.
+     * Perbarui data kategori.
      */
-    public function update(Request $request, Product $product): RedirectResponse
+    public function update(Request $request, Category $category): RedirectResponse
     {
-        $validated = $this->validateProduct($request, $product);
+        $validated = $this->validateCategory($request);
 
-        $product->update($validated);
+        $category->update($validated);
 
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Produk berhasil diperbarui.');
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Kategori berhasil diperbarui.');
     }
 
     /**
-     * Hapus produk dari database.
+     * Hapus kategori dari database.
      */
-    public function destroy(Product $product): RedirectResponse
+    public function destroy(Category $category): RedirectResponse
     {
-        if ($product->transactionDetails()->exists()) {
-            return redirect()->route('admin.products.index')
-                ->with('error', 'Produk tidak bisa dihapus karena sudah memiliki riwayat transaksi.');
+        if ($category->products()->exists()) {
+            return redirect()->route('admin.categories.index')
+                ->with('error', 'Kategori tidak bisa dihapus karena masih memiliki produk terkait.');
         }
 
-        $product->delete();
+        $category->delete();
 
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Produk berhasil dihapus.');
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Kategori berhasil dihapus.');
     }
 
     /**
-     * Validasi input form produk.
+     * Validasi input form kategori.
      *
      * @return array<string, mixed>
      */
-    private function validateProduct(Request $request, ?Product $product = null): array
+    private function validateCategory(Request $request): array
     {
         return $request->validate([
-            'category_id' => ['required', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'sku' => [
-                'required', 'string', 'max:100',
-                'unique:products,sku,'.($product?->id ?? 'NULL').',id',
-            ],
-            'stock' => ['required', 'integer', 'min:0'],
-            'purchase_price' => ['required', 'numeric', 'min:0'],
-            'selling_price' => ['required', 'numeric', 'min:0'],
-            'description' => ['nullable', 'string'],
+            'nama_kategori' => ['required', 'string', 'max:100'],
+            'deskripsi' => ['nullable', 'string'],
         ]);
     }
 }

@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->date('tanggal');
+            $table->enum('jenis_transaksi', ['income', 'expense']);
+            $table->string('description', 255)->nullable();
+            $table->decimal('total_harga', 15, 2)->default(0);
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('transaction_code')->unique();
-            $table->dateTime('transaction_date');
-            $table->decimal('total_amount', 15, 2)->default(0);
-            $table->enum('payment_method', ['cash', 'transfer', 'qris', 'debit', 'credit'])->default('cash');
-            $table->enum('status', ['paid', 'unpaid', 'pending'])->default('paid');
+            $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete();
             $table->timestamps();
         });
     }

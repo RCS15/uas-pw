@@ -9,7 +9,8 @@
     </div>
 
     <!-- Form Login -->
-    <form action="{{ route('admin.dashboard') }}" method="GET" id="loginForm" class="space-y-4">
+    <form action="{{ route('login') }}" method="POST" id="loginForm" class="space-y-4">
+        @csrf
         {{-- Username/Email Input --}}
         <div>
             <label for="email" class="block text-xs font-semibold text-gray-600 mb-1.5">Alamat Email</label>
@@ -19,7 +20,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
                     </svg>
                 </span>
-                <input type="email" name="email" id="email" value="{{ old('email', 'admin@finbiz.com') }}" required
+                <input type="email" name="email" id="email" value="{{ old('email', 'admin@example.com') }}" required
                     class="block w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 rounded-xl text-sm transition-all duration-150 text-gray-800" 
                     placeholder="nama@email.com">
             </div>
@@ -82,15 +83,12 @@
     <!-- Script to dynamically change action depending on demo selection -->
     <script>
         function updateAction(role) {
-            const form = document.getElementById('loginForm');
             const emailInput = document.getElementById('email');
             
             if (role === 'admin') {
-                form.action = "{{ route('admin.dashboard') }}";
-                emailInput.value = "admin@finbiz.com";
+                emailInput.value = "admin@example.com";
             } else {
-                form.action = "{{ route('nonadmin.dashboard') }}";
-                emailInput.value = "kasir@finbiz.com";
+                emailInput.value = "kasir@example.com";
             }
         }
     </script>

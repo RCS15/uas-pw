@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['category_id', 'name', 'sku', 'stock', 'purchase_price', 'selling_price', 'description'])]
+#[Fillable(['category_id', 'nama_barang', 'harga', 'stok'])]
 class Product extends Model
 {
     /**
@@ -18,9 +18,8 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'stock' => 'integer',
-            'purchase_price' => 'decimal:2',
-            'selling_price' => 'decimal:2',
+            'harga' => 'decimal:2',
+            'stok' => 'integer',
         ];
     }
 
@@ -30,6 +29,14 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Transaksi yang merujuk langsung ke produk ini (kolom transactions.product_id).
+     */
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 
     /**
