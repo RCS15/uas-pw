@@ -3,7 +3,7 @@
 @php
     $isEdit = isset($transaction);
     $title = $isEdit ? 'Edit Catatan Transaksi' : 'Catat Transaksi Baru';
-    $actionUrl = $isEdit ? route('admin.transactions.index') : route('admin.transactions.index');
+    $actionUrl = $isEdit ? route('admin.transactions.update', $transaction['id']) : route('admin.transactions.store');
 @endphp
 
 @section('title', $title)
@@ -22,107 +22,100 @@
     </div>
 
     <div class="max-w-2xl bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/20 overflow-hidden">
-        <form action="{{ $actionUrl }}" method="GET" class="p-6 sm:p-8 space-y-6">
+        <form action="{{ $actionUrl }}" method="POST" class="p-6 sm:p-8 space-y-6">
+            @csrf
+            
             @if ($isEdit)
                 <input type="hidden" name="id" value="{{ $transaction['id'] }}">
+                @method("PUT")
             @endif
 
+            <input type="hidden" name="user_id" value="{{ old('user_id', $isEdit ? $transaction['user_id'] : auth()->id()) }}">
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <!-- Transaction Date -->
                 <div>
-                    <label for="date" class="block text-xs font-semibold text-gray-600 mb-2">Tanggal Transaksi <span class="text-red-500">*</span></label>
-                    <input type="date" name="date" id="date" required
-                        value="{{ old('date', $isEdit ? date('Y-m-d', strtotime($transaction['date'])) : date('Y-m-d')) }}"
+                    <label for="tanggal" class="block text-xs font-semibold text-gray-600 mb-2">Tanggal Transaksi <span class="text-red-500">*</span></label>
+                    <input type="date" name="tanggal" id="tanggal" required
+                        value="{{ old('tanggal', $isEdit ? $transaction['tanggal'] : date('Y-m-d')) }}"
                         class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 rounded-xl text-sm transition-all duration-150 text-gray-800">
-                    @error('date')
+                    @error('tanggal')
                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Transaction Type -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-2">Tipe Transaksi <span class="text-red-500">*</span></label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <label class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 cursor-pointer select-none transition-all duration-150 text-sm font-semibold has-[:checked]:bg-emerald-50 has-[:checked]:border-emerald-300 has-[:checked]:text-emerald-700">
-                            <input type="radio" name="type" value="income" class="sr-only" required
-                                {{ old('type', $isEdit ? $transaction['type'] : 'income') === 'income' ? 'checked' : '' }}>
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <label for="jenis_transaksi" class="block text-xs font-semibold text-gray-600 mb-2">Jenis Transaksi <span class="text-red-500">*</span></label>
+                    <select name="jenis_transaksi" id="jenis_transaksi" required
+                        class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 rounded-xl text-sm transition-all duration-150 text-gray-800">
+                        <option value="">-- Pilih Jenis --</option>
+                        <option value="income" {{ old('jenis_transaksi', $isEdit ? $transaction['jenis_transaksi'] : '') == 'income' ? 'selected' : '' }}>
                             Pemasukan
-                        </label>
-                        <label class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 cursor-pointer select-none transition-all duration-150 text-sm font-semibold has-[:checked]:bg-rose-50 has-[:checked]:border-rose-300 has-[:checked]:text-rose-700">
-                            <input type="radio" name="type" value="expense" class="sr-only"
-                                {{ old('type', $isEdit ? $transaction['type'] : 'income') === 'expense' ? 'checked' : '' }}>
-                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                        </option>
+                        <option value="expense" {{ old('jenis_transaksi', $isEdit ? $transaction['jenis_transaksi'] : '') == 'expense' ? 'selected' : '' }}>
                             Pengeluaran
-                        </label>
-                    </div>
-                    @error('type')
+                        </option>
+                    </select>
+                    @error('jenis_transaksi')
                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
-            <!-- Description -->
             <div>
-                <label for="description" class="block text-xs font-semibold text-gray-600 mb-2">Keterangan Transaksi <span class="text-red-500">*</span></label>
-                <input type="text" name="description" id="description" required
-                    value="{{ old('description', $isEdit ? $transaction['description'] : '') }}"
+                <label for="deskripsi" class="block text-xs font-semibold text-gray-600 mb-2">Keterangan Transaksi <span class="text-red-500">*</span></label>
+                <input type="text" name="deskripsi" id="deskripsi" required
+                    value="{{ old('deskripsi', $isEdit ? $transaction['deskripsi'] : '') }}"
                     class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 rounded-xl text-sm transition-all duration-150 text-gray-800"
                     placeholder="Contoh: Penjualan Kopi 50 Cup / Pembelian Gula Pasir">
-                @error('description')
+                @error('deskripsi')
                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <!-- Category Select -->
                 <div>
-                    <label for="category_id" class="block text-xs font-semibold text-gray-600 mb-2">Kategori <span class="text-red-500">*</span></label>
-                    <select name="category_id" id="category_id" required
+                    <label for="tipe_transaksi" class="block text-xs font-semibold text-gray-600 mb-2">Tipe Transaksi <span class="text-red-500">*</span></label>
+                    <select name="tipe_transaksi" id="tipe_transaksi" required
                         class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 rounded-xl text-sm transition-all duration-150 text-gray-800">
-                        <option value="">-- Pilih Kategori --</option>
-                        @foreach ($categories ?? [] as $cat)
-                            <option value="{{ $cat['id'] }}" 
-                                {{ old('category_id', $isEdit ? ($transaction['category_id'] ?? $transaction['category']['id'] ?? '') : '') == $cat['id'] ? 'selected' : '' }}>
-                                {{ $cat['name'] }}
+                        <option value="">-- Pilih Tipe Transaksi --</option>
+                        @php
+                            $tipeOptions = [
+                                'penjualan' => 'Penjualan',
+                                'pendapatan_lain' => 'Pendapatan Lain',
+                                'pembelian' => 'Pembelian',
+                                'operasional' => 'Operasional',
+                                'modal' => 'Modal'
+                            ];
+                        @endphp
+                        @foreach ($tipeOptions as $value => $label)
+                            <option value="{{ $value }}" 
+                                {{ old('tipe_transaksi', $isEdit ? $transaction['tipe_transaksi'] : '') == $value ? 'selected' : '' }}>
+                                {{ $label }}
                             </option>
                         @endforeach
                     </select>
-                    @error('category_id')
+                    @error('tipe_transaksi')
                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Amount -->
                 <div>
-                    <label for="amount" class="block text-xs font-semibold text-gray-600 mb-2">Jumlah Nominal (Rp) <span class="text-red-500">*</span></label>
+                    <label for="total_harga" class="block text-xs font-semibold text-gray-600 mb-2">Jumlah Nominal (Rp) <span class="text-red-500">*</span></label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-sm font-bold text-gray-400">
                             Rp
                         </span>
-                        <input type="number" name="amount" id="amount" required min="1"
-                            value="{{ old('amount', $isEdit ? $transaction['amount'] : '') }}"
+                        <input type="number" name="total_harga" id="total_harga" required min="1" step="0.01"
+                            value="{{ old('total_harga', $isEdit ? $transaction['total_harga'] : '') }}"
                             class="block w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 rounded-xl text-sm transition-all duration-150 text-gray-800 font-bold"
                             placeholder="0">
                     </div>
-                    @error('amount')
+                    @error('total_harga')
                         <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
 
-            <!-- Notes (Optional) -->
-            <div>
-                <label for="notes" class="block text-xs font-semibold text-gray-600 mb-2">Catatan Tambahan (Opsional)</label>
-                <textarea name="notes" id="notes" rows="3"
-                    class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 rounded-xl text-sm transition-all duration-150 text-gray-800"
-                    placeholder="Catatan tambahan mengenai transaksi ini...">{{ old('notes', $isEdit ? ($transaction['notes'] ?? '') : '') }}</textarea>
-                @error('notes')
-                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Form Actions -->
             <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
                 <a href="{{ route('admin.transactions.index') }}" class="px-5 py-2.5 text-sm font-semibold text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all duration-150">
                     Batal

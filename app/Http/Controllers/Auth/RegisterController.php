@@ -45,7 +45,7 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('nonadmin.dashboard')
-            ->with('success', 'Akun berhasil dibuat. Selamat datang, '.$user->name.'!');
+        return redirect()->route('auth.login')
+            ->with('success', 'Akun berhasil dibuat. Silahkan login!');
     }
 }

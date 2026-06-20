@@ -27,7 +27,6 @@
                         <th class="px-6 py-4">Nama & Email</th>
                         <th class="px-6 py-4">Role / Peran</th>
                         <th class="px-6 py-4">Terdaftar Pada</th>
-                        <th class="px-6 py-4">Status</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -36,9 +35,6 @@
                         <tr class="hover:bg-gray-50/50 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-gray-100 font-bold text-gray-600 flex items-center justify-center text-xs">
-                                        {{ strtoupper(substr($u['name'], 0, 2)) }}
-                                    </div>
                                     <div>
                                         <div class="font-bold text-gray-800">{{ $u['name'] }}</div>
                                         <span class="text-xs text-gray-400 font-medium">{{ $u['email'] }}</span>
@@ -52,23 +48,20 @@
                                     </span>
                                 @else
                                     <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-100">
-                                        Staf Kasir
+                                        Staf
                                     </span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-500">
                                 {{ date('d M Y', strtotime($u['created_at'])) }}
                             </td>
-                            <td class="px-6 py-4">
-                                <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                                    Aktif
-                                </span>
-                            </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="flex items-center justify-center gap-3">
                                     <a href="{{ route('admin.users.edit', $u['id']) }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 transition-colors">Edit</a>
                                     <span class="text-gray-200">|</span>
-                                    <form action="{{ route('admin.users.index') }}" method="GET" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')" class="inline">
+                                    <form action="{{ route('admin.users.destroy', $u['id']) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')" class="inline">
+                                        @csrf
+                                        @method('DELETE')
                                         <button type="submit" class="text-xs font-bold text-red-600 hover:text-red-700 transition-colors">
                                             Hapus
                                         </button>

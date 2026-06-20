@@ -4,5 +4,5 @@
 @section('header_title', 'Katalog Produk')
 
 @section('content')
-    <x-product-detail :product="$product" :isAdmin="false" />
+    <x-product-detail :product="$product" :isAdmin="true" />
 @endsection

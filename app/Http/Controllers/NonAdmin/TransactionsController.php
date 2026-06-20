@@ -25,41 +25,54 @@ class TransactionsController extends Controller
     }
 
     /**
-     * Simpan transaksi penjualan baru milik kasir yang login.
-     *
-     * Transaksi yang dicatat staf/kasir selalu bertipe "income" (pemasukan dari penjualan).
+     * Simpan transaksi penjualan baru (Multi-Product sesuai Gambar Database).
      */
     public function store(Request $request): RedirectResponse
     {
+        // 1. Validasi input array dari form (nama input qty dari blade adalah 'qty')
         $validated = $request->validate([
             'tanggal' => ['required', 'date'],
-            'description' => ['required', 'string', 'max:255'],
-            'amount' => ['required', 'numeric', 'min:1'],
-            'product_id' => ['nullable', 'exists:products,id'],
-            'quantity' => ['nullable', 'integer', 'min:1'],
+            'deskripsi' => ['required', 'string', 'max:255'],
+            'total_harga' => ['required', 'numeric', 'min:1'],
+            'product_id' => ['required', 'array', 'min:1'],
+            'product_id.*' => ['required', 'exists:products,id'],
+            'qty' => ['required', 'array', 'min:1'],
+            'qty.*' => ['required', 'integer', 'min:1'],
         ]);
 
+        // 2. Gunakan DB Transaction untuk mengamankan data Master-Detail
         DB::transaction(function () use ($validated) {
+            
+            // Simpan ke Tabel Master: transactions
+            // Kolom 'product_id' di tabel ini kita biarkan null atau abaikan karena pindah ke detail
             $transaction = Transaction::create([
-                'user_id' => Auth::id(),
+                'user_id' => Auth::id(), 
                 'tanggal' => $validated['tanggal'],
                 'jenis_transaksi' => 'income',
-                'description' => $validated['description'],
-                'total_harga' => $validated['amount'],
-                'product_id' => $validated['product_id'] ?? null,
+                'tipe_transaksi' => 'penjualan',
+                'deskripsi' => $validated['deskripsi'],
+                'total_harga' => $validated['total_harga'],
             ]);
 
-            if (! empty($validated['product_id']) && ! empty($validated['quantity'])) {
-                $product = Product::find($validated['product_id']);
+            // Loop seluruh produk di keranjang belanja untuk transaksi detail
+            foreach ($validated['product_id'] as $index => $productId) {
+                $product = Product::find($productId);
 
                 if ($product) {
+                    $qtyMasuk = (int) $validated['qty'][$index];
+                    $hargaProduk = (float) $product->harga;
+
+                    // Simpan ke Tabel Detail: transaction_details (Disesuaikan dengan gambar kolom Anda)
                     TransactionDetail::create([
-                        'transaction_id' => $transaction->id,
-                        'product_id' => $product->id,
-                        'quantity' => $validated['quantity'],
-                        'unit_price' => $product->harga,
-                        'subtotal' => $validated['quantity'] * (float) $product->harga,
+                        'transaction_id' => $transaction->id, // Merujuk ke transactions.id
+                        'product_id' => $product->id,         // Merujuk ke products.id
+                        'jumlah' => $qtyMasuk,                 // Kolom 'jumlah' sesuai gambar
+                        'harga_satuan' => $hargaProduk,        // Kolom 'harga_satuan' sesuai gambar
+                        'subtotal' => $qtyMasuk * $hargaProduk, // Kolom 'subtotal' sesuai gambar
                     ]);
+
+                    // Otomatis kurangi stok karena ini adalah transaksi penjualan
+                    $product->decrement('stok', $qtyMasuk);
                 }
             }
         });
@@ -74,7 +87,7 @@ class TransactionsController extends Controller
     public function history(): View
     {
         $transactions = Transaction::where('user_id', Auth::id())
-            ->with('product')
+            ->with('details.product')
             ->latest('tanggal')
             ->latest('id')
             ->get();

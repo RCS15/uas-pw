@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\NonAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProductsController extends Controller
@@ -11,12 +13,19 @@ class ProductsController extends Controller
     /**
      * Tampilkan katalog produk (hanya melihat, tanpa hak ubah).
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $products = Product::with('category')->orderBy('nama_barang')->get();
+        // Prepare filters for the Product model
+        $filters = $request->only(['search', 'category_id']);
+
+        $products = Product::latest()
+            ->filter($filters)
+            ->paginate(12)
+            ->withQueryString();
 
         return view('nonadmin.products.index', [
             'products' => $products,
+            'categories' => Category::all()
         ]);
     }
 

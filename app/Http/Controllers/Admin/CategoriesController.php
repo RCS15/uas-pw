@@ -15,7 +15,7 @@ class CategoriesController extends Controller
      */
     public function index(): View
     {
-        $categories = Category::withCount('products')->latest()->get();
+        $categories = Category::withCount('products')->oldest()->get();
 
         return view('admin.categories.index', [
             'categories' => $categories,

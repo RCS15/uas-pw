@@ -21,16 +21,14 @@ class LoginController extends Controller
     /**
      * Proses autentikasi login dan redirect berdasarkan role.
      */
-    public function login(Request $request): RedirectResponse
+public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
 
-        $remember = $request->boolean('remember');
-
-        if (! Auth::attempt($credentials, $remember)) {
+        if (!Auth::attempt($credentials)) {
             return back()
                 ->withErrors(['email' => 'Email atau kata sandi yang Anda masukkan salah.'])
                 ->onlyInput('email');
@@ -40,13 +38,30 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
-        if ($user->isAdmin()) {
+        // ============================================
+        // LOGIKA REDIRECT BERDASARKAN ROLE
+        // ============================================
+
+        // 1. Jika user adalah Admin
+        if ($user->isAdmin() || $user->role === 'admin') {
             return redirect()->route('admin.dashboard')
-                ->with('success', 'Selamat datang kembali, '.$user->name.'!');
+                ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
         }
 
-        return redirect()->route('nonadmin.dashboard')
-            ->with('success', 'Selamat datang kembali, '.$user->name.'!');
+        // 2. Jika user adalah Non-Admin
+        if ($user->role === 'nonadmin') {
+            return redirect()->route('nonadmin.dashboard')
+                ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+        }
+
+        // 3. Fallback pengaman (opsional)
+        // Jika karena alasan tertentu ada user dengan role selain admin/nonadmin di database
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('auth.login')
+            ->withErrors(['email' => 'Akun Anda tidak memiliki role yang valid untuk login.']);
     }
 
     /**

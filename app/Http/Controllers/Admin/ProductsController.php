@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Model\TransactionDetail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+
 
 class ProductsController extends Controller
 {
@@ -58,6 +60,14 @@ class ProductsController extends Controller
     }
 
     /**
+     * Tampilkan detail produk.
+     */
+    public function show(Product $product): View
+    {
+        return view('admin.products.show', compact('product'));
+    }
+
+    /**
      * Perbarui data produk.
      */
     public function update(Request $request, Product $product): RedirectResponse
@@ -75,7 +85,7 @@ class ProductsController extends Controller
      */
     public function destroy(Product $product): RedirectResponse
     {
-        if ($product->transactionDetails()->exists() || $product->transactions()->exists()) {
+        if ($product->transactionDetails()->exists()) {
             return redirect()->route('admin.products.index')
                 ->with('error', 'Produk tidak bisa dihapus karena sudah memiliki riwayat transaksi.');
         }

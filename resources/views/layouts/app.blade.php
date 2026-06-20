@@ -75,18 +75,6 @@
                 <!-- Right Side: Session Info & Profile Dropdown -->
                 <div class="flex items-center gap-4">
                     
-                    <!-- Role Quick Switch Demo Badge -->
-                    <div class="flex items-center gap-1.5">
-                        <a href="{{ request()->is('admin*') ? route('nonadmin.dashboard') : route('admin.dashboard') }}" 
-                           class="hidden sm:inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full border bg-white shadow-sm transition-all duration-150 {{ request()->is('admin*') ? 'text-teal-700 border-teal-200 hover:bg-teal-50' : 'text-emerald-700 border-emerald-200 hover:bg-emerald-50' }}"
-                           title="Klik untuk berpindah role (Demo)">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                            </svg>
-                            Pindah Role: {{ request()->is('admin*') ? 'Kasir' : 'Admin' }}
-                        </a>
-                    </div>
-
                     <!-- Profile Dropdown Component -->
                     <div class="relative">
                         <button id="btn-profile-dropdown" class="flex items-center gap-2 p-1.5 rounded-full hover:bg-gray-50 focus:outline-none transition-colors duration-150">
@@ -115,12 +103,6 @@
                                 Profil Saya
                             </a>
                             
-                            <a href="{{ request()->is('admin*') ? route('nonadmin.dashboard') : route('admin.dashboard') }}" class="sm:hidden flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 font-medium transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-                                </svg>
-                                Berpindah Role
-                            </a>
 
                             <div class="border-t border-gray-50 my-1"></div>
                             
@@ -130,7 +112,7 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                     </svg>
-                                    Keluar Aplikasi
+                                    Log Out
                                 </button>
                             </form>
                         </div>

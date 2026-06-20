@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->date('tanggal');
             $table->enum('jenis_transaksi', ['income', 'expense']);
-            $table->string('description', 255)->nullable();
+            $table->enum('tipe_transaksi',['penjualan','pendapatan lain','pembelian','operasional','modal','hutang','peminjaman']);
+            $table->string('deskripsi', 255)->nullable();
             $table->decimal('total_harga', 15, 2)->default(0);
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete();
             $table->timestamps();
         });
     }
