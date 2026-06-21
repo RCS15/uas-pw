@@ -18,22 +18,29 @@ class DashboardController extends Controller
     {
         $userId = Auth::id();
 
-        $todaysTransactions = Transaction::where('user_id', $userId)
+        // ✅ Gunakan query agregat langsung — tidak perlu load semua baris ke memory
+        $summaryHariIni = Transaction::where('user_id', $userId)
             ->whereDate('tanggal', today())
-            ->with('details')
-            ->get();
+            ->selectRaw('
+                COUNT(*) as jumlah_transaksi,
+                COALESCE(SUM(total_harga), 0) as omzet_hari_ini
+            ')
+            ->first();
 
-        $omzetHariIni = (float) $todaysTransactions->sum('total_harga');
+        // ✅ Hitung item terjual via join langsung, tidak perlu flatMap di PHP
+        $itemTerjual = DB::table('transaction_details')
+            ->join('transactions', 'transactions.id', '=', 'transaction_details.transaction_id')
+            ->where('transactions.user_id', $userId)
+            ->whereDate('transactions.tanggal', today())
+            ->sum('transaction_details.jumlah');
 
-        $jumlahTransaksi = $todaysTransactions->count();
-
-        $itemTerjual = $todaysTransactions->flatMap(function ($transaction) {
-            return $transaction->details;
-        })->sum('jumlah');
-
+        // ✅ Popular products: tambahkan filter rentang tanggal yang wajar (misal 30 hari)
+        //    agar query tidak makin lambat seiring bertambahnya data historis.
+        //    Uncomment ->where('transactions.user_id', $userId) jika ingin per-kasir.
         $popularProducts = Product::join('transaction_details', 'products.id', '=', 'transaction_details.product_id')
             ->join('transactions', 'transactions.id', '=', 'transaction_details.transaction_id')
-            ->where('transactions.user_id', $userId) // Khusus performa kasir yang login
+            ->whereDate('transactions.tanggal', '>=', now()->subDays(30)) // ✅ Batasi rentang data
+            // ->where('transactions.user_id', $userId) // Aktifkan jika ingin per-kasir
             ->select(
                 'products.id',
                 'products.nama_barang',
@@ -43,10 +50,11 @@ class DashboardController extends Controller
                 DB::raw('SUM(transaction_details.subtotal) as total_pendapatan')
             )
             ->groupBy('products.id', 'products.nama_barang', 'products.harga', 'products.stok')
-            ->orderByDesc('total_terjual') // Urutkan dari yang paling banyak terjual
-            ->take(3) // Ambil top 5 produk teratas
+            ->orderByDesc('total_terjual')
+            ->take(3) // ✅ Konsisten: ambil top 3
             ->get();
 
+        // ✅ Recent transactions: sudah efisien, hanya ambil 4 terakhir
         $recentTransactions = Transaction::where('user_id', $userId)
             ->with('details.product')
             ->latest('tanggal')
@@ -55,10 +63,10 @@ class DashboardController extends Controller
             ->get();
 
         return view('nonadmin.dashboard', [
-            'omzet_hari_ini' => $omzetHariIni,
-            'jumlah_transaksi' => $jumlahTransaksi,
-            'total_barang_terjual' => $itemTerjual,
-            'recent_transactions' => $recentTransactions,
+            'omzet_hari_ini'       => (float) ($summaryHariIni->omzet_hari_ini ?? 0),
+            'jumlah_transaksi'     => (int) ($summaryHariIni->jumlah_transaksi ?? 0),
+            'total_barang_terjual' => (int) $itemTerjual,
+            'recent_transactions'  => $recentTransactions,
             'popular_products'     => $popularProducts,
         ]);
     }
