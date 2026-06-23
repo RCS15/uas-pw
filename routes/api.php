@@ -3,14 +3,25 @@
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\TransactionController;
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
-Route::apiResource('categories', CategoryController::class);
+
+Route::post('login', [AuthController::class, 'loginApi']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', [AuthController::class, 'logoutApi']);
+    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('products', ProductController::class);
+    Route::apiResource('transactions', TransactionController::class);
+});
+
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +39,7 @@ Route::apiResource('categories', CategoryController::class);
 | DELETE | /api/products/{id}      | Hapus item    | destroy
 |
 */
-Route::apiResource('products', ProductController::class);
+
 
 /*
 |--------------------------------------------------------------------------
@@ -46,4 +57,4 @@ Route::apiResource('products', ProductController::class);
 | DELETE | /api/transactions/{id}      | Hapus item    | destroy
 |
 */
-Route::apiResource('transactions', TransactionController::class);
+
