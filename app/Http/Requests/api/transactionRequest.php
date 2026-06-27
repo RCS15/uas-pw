@@ -23,7 +23,7 @@ class transactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tanggal' => 'required|date',
+            'tanggal' => 'required',
             'user_id' => 'required|exists:users,id',
             'jenis_transaksi' => 'required|in:income,expense',
             'deskripsi' => 'nullable|string',
@@ -31,12 +31,12 @@ class transactionRequest extends FormRequest
         ];
     }
 
-    public function messages()
-    {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Transaksi gagal ditambahkan',
-            'data' => null,
-        ], 400);
-    }
+    // public function messages()
+    // {
+    //     return response()->json([
+    //         'status' => 'error',
+    //         'message' => 'Transaksi gagal ditambahkan',
+    //         'data' => null,
+    //     ], 400);
+    // }
 }

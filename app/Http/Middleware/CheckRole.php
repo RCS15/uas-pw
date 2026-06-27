@@ -18,11 +18,26 @@ class CheckRole
         $user = $request->user();
 
         if (! $user) {
+
+            if($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Anda belum login.'
+                ], 401);
+            }
+
             return redirect()->route('auth.login')
                 ->with('error', 'Silakan masuk terlebih dahulu untuk mengakses halaman ini.');
         }
 
         if (! in_array($user->role, $roles, true)) {
+
+
+            if($request->wantsJson()){
+                return response()->json([
+                    'message' => 'Anda tidak memiliki hak akses untuk membuka halaman ini.'
+                ], 403);
+            }
+
             abort(403, 'Anda tidak memiliki hak akses untuk membuka halaman ini.');
         }
 

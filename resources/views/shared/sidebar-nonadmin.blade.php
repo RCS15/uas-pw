@@ -89,7 +89,7 @@
 
     <!-- Bottom Actions / User Profile Summary -->
     <div class="p-4 border-t border-gray-50 bg-gray-50/50">
-        <div class="flex items-center gap-3 mb-4">
+        {{-- <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-full bg-teal-600 text-white font-bold flex items-center justify-center text-sm shadow-sm">
                 {{ strtoupper(substr(auth()->user()->name ?? 'SK', 0, 2)) }}
             </div>
@@ -97,7 +97,7 @@
                 <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name ?? 'Staff Kasir' }}</p>
                 <p class="text-[11px] text-gray-500 truncate">{{ auth()->user()->email ?? 'kasir@example.com' }}</p>
             </div>
-        </div>
+        </div> --}}
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-white border border-gray-200 hover:border-red-200 text-gray-600 hover:text-red-600 rounded-xl text-sm font-medium transition-all duration-150 shadow-sm">

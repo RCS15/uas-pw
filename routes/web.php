@@ -54,32 +54,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     // CRUD Pengguna
     Route::resource('users', UsersController::class);
 
-    // Route::get('/users', [UsersController::class, 'index'])->name('users.index');
-    // Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');
-    // Route::post('/users', [UsersController::class, 'store'])->name('users.store');
-    // Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
-    // Route::put('/users/{user}', [UsersController::class, 'update'])->name('users.update');
-    // Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('users.destroy');
-
     // CRUD Produk
     Route::resource('products', AdminProductsController::class);
-    
-    // Route::get('/products', [AdminProductsController::class, 'index'])->name('products.index');
-    // Route::get('/products/create', [AdminProductsController::class, 'create'])->name('products.create');
-    // Route::post('/products', [AdminProductsController::class, 'store'])->name('products.store');
-    // Route::get('/products/{product}/edit', [AdminProductsController::class, 'edit'])->name('products.edit');
-    // Route::put('/products/{product}', [AdminProductsController::class, 'update'])->name('products.update');
-    // Route::delete('/products/{product}', [AdminProductsController::class, 'destroy'])->name('products.destroy');
 
     // CRUD Kategori
     Route::resource('categories', CategoriesController::class);
 
-    // Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index');
-    // Route::get('/categories/create', [CategoriesController::class, 'create'])->name('categories.create');
-    // Route::post('/categories', [CategoriesController::class, 'store'])->name('categories.store');
-    // Route::get('/categories/{category}/edit', [CategoriesController::class, 'edit'])->name('categories.edit');
-    // Route::put('/categories/{category}', [CategoriesController::class, 'update'])->name('categories.update');
-    // Route::delete('/categories/{category}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 });
 
 /*

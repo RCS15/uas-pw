@@ -8,19 +8,41 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
+Route::post('register', [AuthController::class, 'registerApi']);
 
 Route::post('login', [AuthController::class, 'loginApi']);
 
 Route::middleware('auth:sanctum')->group(function () {
+
     Route::post('logout', [AuthController::class, 'logoutApi']);
-    Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('products', ProductController::class);
-    Route::apiResource('transactions', TransactionController::class);
+
+    Route::middleware('role:admin')->prefix('admin')->group(function () {
+        Route::apiResource('categories',CategoryController::class);
+        Route::apiResource('products',ProductController::class);
+        Route::apiResource('transactions',TransactionController::class);
+    });
+
+    Route::middleware('role:nonadmin')->prefix('finbiz')->group(function () {
+        Route::apiResource('transactions',TransactionController::class)->only(['index','store','show']);
+        Route::apiResource('products',ProductController::class)->only(['index','show']);
+    });
 });
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*

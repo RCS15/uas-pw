@@ -41,7 +41,30 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Token berhasil dihapus (Logout sukses).'
+            'message' => 'Logout Berhasil'
         ], 200);
+    }
+
+    public function registerApi(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email|max:255',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        // Buat user baru
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => 'nonadmin'
+        ]);
+
+        return response()->json([
+            'message' => 'Registrasi Berhasil',
+            'user' => $user
+        ], 201);
     }
 }

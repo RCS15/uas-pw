@@ -28,18 +28,19 @@ class categoryRequest extends FormRequest
         ];
     }
 
+    
     /**
      * Get the error messages for the defined validation rules.
      *
      * @return array<string, string>
      */
-    public function messages(): array
-    {
-        return [
-            'nama_kategori.required' => 'Nama kategori wajib diisi',
-            'nama_kategori.string' => 'Nama kategori harus berupa string',
-            'nama_kategori.max' => 'Nama kategori maksimal 255 karakter',
-            'deskripsi.string' => 'Deskripsi harus berupa string',
-        ];
-    }
+    // public function messages(): array
+    // {
+    //     return [
+    //         'nama_kategori.required' => 'Nama kategori wajib diisi',
+    //         'nama_kategori.string' => 'Nama kategori harus berupa string',
+    //         'nama_kategori.max' => 'Nama kategori maksimal 255 karakter',
+    //         'deskripsi.string' => 'Deskripsi harus berupa string',
+    //     ];
+    // }
 }
