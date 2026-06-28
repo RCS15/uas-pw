@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mie Gacoan Card</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen pb-24"> <div class="p-4 flex justify-center">
+    <div class="max-w-xs w-full bg-white rounded-2xl border border-gray-100 p-4 shadow-sm font-sans">
+      
+      <div class="relative w-full h-44 rounded-xl overflow-hidden bg-gray-100 mb-4">
+        <img 
+          src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=500&q=80" 
+          alt="Mie Hompimpa" 
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+      <div class="flex flex-col justify-between min-h-[120px]">
+        <div>
+          <h3 class="text-base font-bold text-gray-800 tracking-wide uppercase leading-tight">
+            MIE HOMPIMPA<br>LV 1
+          </h3>
+        </div>
+
+        <div class="flex items-center justify-between mt-4 h-9">
+          <span class="text-base font-bold text-gray-800">
+            Rp10.910
+          </span>
+
+          <div id="action-container">
+            <button 
+              id="btn-tambah"
+              class="w-24 py-1 border border-purple-300 text-purple-600 font-semibold rounded-xl text-sm hover:bg-purple-50 active:scale-95 transition"
+            >
+              Tambah
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="cart-bar" class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] hidden z-50">
+    <div class="max-w-md mx-auto bg-pink-500 rounded-xl p-3 flex items-center justify-between text-white shadow-lg">
+      
+      <div class="flex items-center space-x-3">
+        <div class="relative p-2 bg-pink-600 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          </svg>
+          <span id="cart-badge" class="absolute -top-1 -right-1 bg-white text-pink-600 text-xs font-bold px-1.5 py-0.5 rounded-full shadow-sm">
+            0
+          </span>
+        </div>
+        
+        <div>
+          <p class="text-xs text-pink-100 font-medium">Total</p>
+          <p id="cart-total-price" class="text-base font-bold">Rp0</p>
+        </div>
+      </div>
+
+      <button onclick="alert('Pesanan dikirim!')" class="flex items-center space-x-1 bg-white text-pink-600 font-bold px-4 py-2 rounded-lg text-sm hover:bg-pink-50 active:scale-95 transition">
+        <span>CHECK OUT</span>
+        <span id="cart-btn-count">(0)</span>
+      </button>
+
+    </div>
+  </div>
+
+  <script>
+    let count = 0;
+    const hargaSatuan = 10910;
+
+    const actionContainer = document.getElementById('action-container');
+    const cartBar = document.getElementById('cart-bar');
+    const cartBadge = document.getElementById('cart-badge');
+    const cartTotalPrice = document.getElementById('cart-total-price');
+    const cartBtnCount = document.getElementById('cart-btn-count');
+
+    // Fungsi untuk memperbarui tampilan Bar Pesanan di bawah
+    function updateCartBar() {
+      if (count > 0) {
+        // Hitung total harga
+        const totalHarga = count * hargaSatuan;
+        
+        // Format mata uang rupiah manual sederhana
+        const formatRupiah = 'Rp' + totalHarga.toLocaleString('id-ID');
+
+        // Update teks teks di dalam bar
+        cartBadge.innerText = count;
+        cartTotalPrice.innerText = formatRupiah;
+        cartBtnCount.innerText = `(${count})`;
+
+        // Munculkan bar pesanan dengan menghapus class 'hidden'
+        cartBar.classList.remove('hidden');
+      } else {
+        // Sembunyikan bar pesanan jika keranjang kosong
+        cartBar.classList.add('hidden');
+      }
+    }
+
+    // Fungsi utama merender tombol tambah / counter
+    function renderControl() {
+      if (count === 0) {
+        actionContainer.innerHTML = `
+          <button id="btn-tambah" class="w-24 py-1 border border-purple-300 text-purple-600 font-semibold rounded-xl text-sm hover:bg-purple-50 active:scale-95 transition">
+            Tambah
+          </button>
+        `;
+        
+        document.getElementById('btn-tambah').addEventListener('click', () => {
+          count = 1;
+          renderControl();
+          updateCartBar();
+        });
+
+      } else {
+        actionContainer.innerHTML = `
+          <div class="flex items-center space-x-3">
+            <button id="btn-minus" class="w-7 h-7 flex items-center justify-center rounded-full border border-gray-400 text-gray-600 hover:bg-gray-50 active:scale-95 transition">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+            </button>
+            <span class="text-base font-bold text-gray-800 w-4 text-center">${count}</span>
+            <button id="btn-plus" class="w-7 h-7 flex items-center justify-center rounded-full border border-gray-400 text-gray-600 hover:bg-gray-50 active:scale-95 transition">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+            </button>
+          </div>
+        `;
+
+        document.getElementById('btn-minus').addEventListener('click', () => {
+          count--;
+          renderControl();
+          updateCartBar();
+        });
+
+        document.getElementById('btn-plus').addEventListener('click', () => {
+          count++;
+          renderControl();
+          updateCartBar();
+        });
+      }
+    }
+
+    // Inisialisasi awal tombol klik pertama kali
+    document.getElementById('btn-tambah').addEventListener('click', () => {
+      count = 1;
+      renderControl();
+      updateCartBar();
+    });
+  </script>
+</body>
+</html>
