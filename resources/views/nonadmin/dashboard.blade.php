@@ -22,7 +22,7 @@
     </div>
 
     <!-- Summary Harian Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {{-- Total Omzet Hari Ini --}}
         <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20">
             <div class="flex items-center justify-between mb-4">
@@ -75,7 +75,8 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 
         {{-- Recent Transactions --}}
-        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 lg:col-span-2 flex flex-col">
+        <div
+            class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 lg:col-span-2 flex flex-col">
             <div class="flex items-center justify-between mb-6">
                 <div>
                     <h3 class="text-base font-bold text-gray-900">Input Penjualan Terakhir Anda</h3>
@@ -88,7 +89,8 @@
             <div class="overflow-x-auto -mx-6">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100">
+                        <tr
+                            class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100">
                             <th class="px-6 py-3">Waktu</th>
                             <th class="px-6 py-3">Keterangan Penjualan</th>
                             <th class="px-6 py-3 text-right">Total</th>
@@ -99,7 +101,7 @@
                             <tr class="hover:bg-gray-50/50 transition-colors">
                                 {{-- ✅ Gunakan kolom 'tanggal' yang memang ada di model, bukan 'created_at' --}}
                                 <td class="px-6 py-4 font-medium text-gray-400 whitespace-nowrap">
-                                    {{ \Carbon\Carbon::parse($transaction->tanggal)->format('H:i') }}
+                                    {{ \Carbon\Carbon::parse($transaction->created_at)->format('H:i') }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="space-y-1 bg-gray-50 p-2 rounded-xl border border-gray-100 text-xs">
@@ -123,7 +125,8 @@
                             <tr>
                                 <td colspan="3" class="px-6 py-10 text-center">
                                     <div class="flex flex-col items-center gap-2 text-gray-400">
-                                        <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                         </svg>
@@ -148,7 +151,8 @@
 
             <div class="space-y-3">
                 @forelse ($popular_products as $product)
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100/50 hover:border-emerald-300 hover:bg-emerald-50/10 transition-all duration-200">
+                    <div
+                        class="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100/50 hover:border-emerald-300 hover:bg-emerald-50/10 transition-all duration-200">
                         <div class="min-w-0 mr-3">
                             <span class="font-bold text-gray-800 text-sm block truncate">
                                 {{ $product->nama_barang }}
