@@ -56,7 +56,7 @@ class DashboardController extends Controller
         $totalTransaksi   = $baseQuery()->count();
 
         // Pemasukan hari ini (selalu hari ini, tidak terpengaruh filter)
-        $pemasukanHariIni = (float) Transaction::where('jenis_transaksi', 'income')
+        $pemasukanHariIni = (float) Transaction::where('tipe_transaksi', 'penjualan')
             ->whereDate('tanggal', Carbon::today())
             ->sum('total_harga');
 

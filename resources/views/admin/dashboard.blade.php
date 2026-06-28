@@ -5,82 +5,82 @@
 
 @section('content')
     <!-- Welcome Header Section -->
-<!-- Welcome Header + Filter Section -->
-<div class="mb-6 flex flex-col gap-4">
-    {{-- Baris 1: Judul & Tombol Transaksi --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900">Halo, {{ Auth::user()->name }}!</h1>
-            <p class="text-sm text-gray-500">
-                Menampilkan data keuangan untuk periode:
-                <span class="font-semibold text-emerald-600">{{ $periodLabel }}</span>
-            </p>
+    <!-- Welcome Header + Filter Section -->
+    <div class="mb-6 flex flex-col gap-4">
+        {{-- Baris 1: Judul & Tombol Transaksi --}}
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Halo, {{ Auth::user()->name }}!</h1>
+                <p class="text-sm text-gray-500">
+                    Menampilkan data keuangan untuk periode:
+                    <span class="font-semibold text-emerald-600">{{ $periodLabel }}</span>
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span
+                    class="text-xs font-semibold text-gray-500 bg-white border border-gray-200 px-3.5 py-2 rounded-xl shadow-sm flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Sistem Online
+                </span>
+                <a href="{{ route('admin.transactions.create') }}"
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold shadow-sm transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Transaksi Baru
+                </a>
+            </div>
         </div>
-        <div class="flex items-center gap-3">
-            <span class="text-xs font-semibold text-gray-500 bg-white border border-gray-200 px-3.5 py-2 rounded-xl shadow-sm flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                Sistem Online
-            </span>
-            <a href="{{ route('admin.transactions.create') }}"
-               class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold shadow-sm transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                Transaksi Baru
-            </a>
-        </div>
-    </div>
 
-    {{-- Baris 2: Filter Periode --}}
-    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-3 flex flex-wrap items-center gap-2">
-        {{-- Tombol Cepat --}}
-        @foreach([
-            'hari_ini'   => 'Hari Ini',
+        {{-- Baris 2: Filter Periode --}}
+        <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-3 flex flex-wrap items-center gap-2">
+            {{-- Tombol Cepat --}}
+            @foreach ([
+            'hari_ini' => 'Hari Ini',
             'minggu_ini' => 'Minggu Ini',
-            'bulan_ini'  => 'Bulan Ini',
-            'tahun_ini'  => 'Tahun Ini',
+            'bulan_ini' => 'Bulan Ini',
+            'tahun_ini' => 'Tahun Ini',
         ] as $key => $label)
-            <a href="{{ route('admin.dashboard', ['period' => $key]) }}"
-               class="px-4 py-2 rounded-xl text-xs font-bold transition-all
+                <a href="{{ route('admin.dashboard', ['period' => $key]) }}"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all
                       {{ $activePeriod === $key
                           ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/20'
                           : 'text-gray-500 hover:bg-gray-100' }}">
-                {{ $label }}
-            </a>
-        @endforeach
+                    {{ $label }}
+                </a>
+            @endforeach
 
-        {{-- Divider --}}
-        <div class="w-px h-6 bg-gray-200 mx-1 hidden sm:block"></div>
+            {{-- Divider --}}
+            <div class="w-px h-6 bg-gray-200 mx-1 hidden sm:block"></div>
 
-        {{-- Custom Date Range --}}
-        <form method="GET" action="{{ route('admin.dashboard') }}"
-              class="flex flex-wrap items-center gap-2"
-              id="customDateForm">
-            <input type="hidden" name="period" value="custom">
-            <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
-                <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-                <input type="date" name="date_start"
-                       value="{{ $dateStart }}"
-                       class="text-xs font-semibold text-gray-600 bg-transparent border-none outline-none cursor-pointer w-32"
-                       onchange="document.getElementById('customDateForm').submit()">
-                <span class="text-xs text-gray-400">–</span>
-                <input type="date" name="date_end"
-                       value="{{ $dateEnd }}"
-                       class="text-xs font-semibold text-gray-600 bg-transparent border-none outline-none cursor-pointer w-32"
-                       onchange="document.getElementById('customDateForm').submit()">
-            </div>
-            {{-- Indikator aktif custom --}}
-            @if($activePeriod === 'custom')
-                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-lg">
-                    ✓ Custom Aktif
-                </span>
-            @endif
-        </form>
+            {{-- Custom Date Range --}}
+            <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-wrap items-center gap-2"
+                id="customDateForm">
+                <input type="hidden" name="period" value="custom">
+                <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
+                    <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <input type="date" name="date_start" value="{{ $dateStart }}"
+                        class="text-xs font-semibold text-gray-600 bg-transparent border-none outline-none cursor-pointer w-32"
+                        onchange="document.getElementById('customDateForm').submit()">
+                    <span class="text-xs text-gray-400">–</span>
+                    <input type="date" name="date_end" value="{{ $dateEnd }}"
+                        class="text-xs font-semibold text-gray-600 bg-transparent border-none outline-none cursor-pointer w-32"
+                        onchange="document.getElementById('customDateForm').submit()">
+                </div>
+                {{-- Indikator aktif custom --}}
+                @if ($activePeriod === 'custom')
+                    <span
+                        class="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-lg">
+                        ✓ Custom Aktif
+                    </span>
+                @endif
+            </form>
+        </div>
     </div>
-</div>
 
     <!-- KPI Cards Grid -->
     <!-- KPI Cards Grid -->
@@ -113,11 +113,40 @@
             </div>
         </div>
 
-        {{-- Pemasukan Penjualan Hari Ini --}}
+        {{-- Total Pemasukan --}}
         <div
             class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Pemasukan Hari Ini</span>
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    Total Pemasukan
+                </span>
+                <span class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-2xl font-bold text-gray-900">
+                    Rp {{ number_format($total_pendapatan, 0, ',', '.') }}
+                </span>
+            </div>
+            <div class="mt-2 text-xs font-medium text-emerald-600 flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
+                        clip-rule="evenodd" />
+                </svg>
+                <span>Seluruh pemasukan tercatat</span>
+            </div>
+        </div>
+
+        {{-- Total Penjualan Hari Ini --}}
+        <div
+            class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Penjualan Hari ini</span>
                 <span class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -167,32 +196,6 @@
             </div>
         </div>
 
-        {{-- Total Pendapatan --}}
-        <div
-            class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Pendapatan</span>
-                <span class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                </span>
-            </div>
-            <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-bold text-gray-900">
-                    Rp {{ number_format($total_pendapatan, 0, ',', '.') }}
-                </span>
-            </div>
-            <div class="mt-2 text-xs font-medium text-emerald-600 flex items-center gap-1">
-                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
-                        clip-rule="evenodd" />
-                </svg>
-                <span>Seluruh pemasukan tercatat</span>
-            </div>
-        </div>
 
         {{-- Saldo Bersih --}}
         <div
@@ -244,6 +247,7 @@
             </div>
         </div>
 
+
     </div>
 
     <!-- Chart and Quick Actions Grid -->
@@ -253,7 +257,27 @@
             <div class="flex items-center justify-between mb-6">
                 <div>
                     <h3 class="text-base font-bold text-gray-900 mb-1">Tren Pendapatan</h3>
-                    <p class="text-xs text-gray-500">7 Hari Terakhir</p>
+                    <p class="text-xs text-gray-500">
+                        @php
+                            switch ($activePeriod) {
+                                case 'hari_ini':
+                                    echo '7 Hari Terakhir';
+                                    break;
+                                case 'minggu_ini':
+                                    echo '1 Minggu Terakhir';
+                                    break;
+                                case 'bulan_ini':
+                                    echo '1 Bulan Terakhir';
+                                    break;
+                                case 'tahun_ini':
+                                    echo '1 Tahun Terakhir';
+                                    break;
+                                default:
+                                    echo 'Periode Custom';
+                                    break;
+                            }
+                        @endphp
+                    </p>
                 </div>
             </div>
 
