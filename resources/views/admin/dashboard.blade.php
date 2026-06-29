@@ -378,23 +378,11 @@
                     </a>
                 </div>
             </div>
-
-            <div class="mt-4 p-3.5 bg-emerald-50/50 rounded-xl border border-emerald-100/50 flex items-center gap-3">
-                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <div class="text-[11px] text-emerald-800">
-                    <p class="font-bold">Tips Hari Ini</p>
-                    <p>Unduh laporan bulanan untuk melihat analisis piutang secara rinci.</p>
-                </div>
-            </div>
         </div>
     </div>
 
     <!-- Bottom Grid: Recent Transactions & Low Stock Alert -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <div class="flex flex-col gap-5">
         <!-- Recent Transactions Table -->
         <div
             class="bg-white rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 overflow-hidden lg:col-span-2">

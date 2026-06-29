@@ -49,15 +49,15 @@
         </div>
 
         <div>
-            <div class="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
-                <div>
+            <div class="flex flex-col items-center justify-center gap-2">
+                <div class="flex flex-col items-center justify-center">
                     <span class="text-gray-400 text-[10px] block font-medium uppercase tracking-wider">Harga Jual</span>
                     <span class="text-emerald-700 font-bold text-lg">
                         Rp {{ number_format($product['harga'] ?? 0, 0, ',', '.') }}
                     </span>
                 </div>
 
-                <div class="flex gap-2 items-center">
+                <div class="flex gap-3 items-center border-t border-gray-200 pt-3 justify-center w-full">
                     @if ($isAdmin)
                         {{-- Tombol Edit --}}
                         <a href="{{ route('admin.products.edit', $product['id']) }}"
@@ -78,7 +78,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit"
-                                class="p-2.5 bg-gray-50 hover:bg-emerald-600 hover:text-white rounded-xl transition-all duration-200 text-gray-600 border border-gray-100 hover:border-emerald-600 shadow-sm"
+                                class="p-2.5 bg-gray-50 hover:bg-red-600 hover:text-white rounded-xl transition-all duration-200 text-gray-600 border border-gray-100 hover:border-red-600 shadow-sm"
                                 title="Hapus">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" 
                                     xmlns="http://www.w3.org/2000/svg">
@@ -92,7 +92,7 @@
 
                     {{-- Tombol Detail --}}
                     <a href="{{ $isAdmin ? route('admin.products.show', $product['id']) : route('nonadmin.products.show', $product['id']) }}"
-                        class="p-2.5 bg-gray-50 hover:bg-emerald-600 hover:text-white rounded-xl transition-all duration-200 text-gray-600 border border-gray-100 hover:border-emerald-600 shadow-sm"
+                        class="p-2.5 bg-gray-50 hover:bg-blue-600 hover:text-white rounded-xl transition-all duration-200 text-gray-600 border border-gray-100 hover:border-blue-600 shadow-sm"
                         title="Lihat Detail">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">

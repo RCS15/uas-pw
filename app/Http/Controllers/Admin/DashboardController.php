@@ -68,7 +68,7 @@ class DashboardController extends Controller
             ->with('user')
             ->latest('tanggal')
             ->latest('id')
-            ->take(5)
+            ->take(3)
             ->get();
 
         // ── 5. Stok Rendah ────────────────────────────────────────────────

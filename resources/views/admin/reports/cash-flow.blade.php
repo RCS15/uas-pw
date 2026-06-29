@@ -143,10 +143,17 @@
             <div class="pt-6 border-t-2 border-double border-gray-200">
                 <div class="flex justify-between items-center text-base font-extrabold text-gray-900">
                     <span class="uppercase">SALDO KAS AKHIR PERIODE ({{ $tanggalCetak }})</span>
+                    @if($saldoAkhir >= 0)
                     <span
                         class="text-emerald-700 px-4 py-1.5 bg-emerald-50 rounded-xl border border-emerald-100 print:bg-white print:border-0 print:p-0">
                         Rp {{ number_format($saldoAkhir, 0, ',', '.') }}
                     </span>
+                    @else
+                    <span
+                        class="text-rose-700 px-4 py-1.5 bg-rose-50 rounded-xl border border-rose-100 print:bg-white print:border-0 print:p-0">
+                        Rp {{ number_format($saldoAkhir, 0, ',', '.') }}
+                    </span>
+                    @endif
                 </div>
             </div>
         </div>

@@ -1,11 +1,11 @@
 @extends('layouts.auth')
 
-@section('title', 'Daftar Akun UMKM')
+@section('title', 'Buat Akun UMKM')
 
 @section('content')
     <div class="text-center mb-6">
-        <h2 class="text-xl font-bold text-gray-800">Daftar Akun UMKM</h2>
-        <p class="text-xs text-gray-500 mt-1">Mulai kelola pembukuan usaha Anda secara digital</p>
+        <h1 class="text-gray-900 font-extrabold text-2xl tracking-tight">Buat Akun UMKM</h1>
+        <p class="text-sm text-gray-500 mt-1">Silahkan Daftarkan Akun Anda</p>
     </div>
 
     <!-- Form Register -->

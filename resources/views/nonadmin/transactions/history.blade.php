@@ -134,5 +134,5 @@
                     class="p-1 px-3 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-400 cursor-not-allowed">Selanjutnya</button>
             </div>
         </div>
-    </div>  x
+    </div> 
 @endsection

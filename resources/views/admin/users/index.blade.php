@@ -10,9 +10,11 @@
             <h1 class="text-2xl font-bold text-gray-900">Daftar Pengguna</h1>
             <p class="text-sm text-gray-500">Kelola akses akun Admin dan Staf/Kasir untuk operasional usaha</p>
         </div>
-        <a href="{{ route('admin.users.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold shadow-sm shadow-emerald-600/10 transition-colors self-start sm:self-auto">
+        <a href="{{ route('admin.users.create') }}"
+            class="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold shadow-sm shadow-emerald-600/10 transition-colors self-start sm:self-auto">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M18 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             Tambah Pengguna Baru
         </a>
@@ -23,7 +25,8 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100">
+                    <tr
+                        class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100">
                         <th class="px-6 py-4">Nama & Email</th>
                         <th class="px-6 py-4">Role / Peran</th>
                         <th class="px-6 py-4">Terdaftar Pada</th>
@@ -43,11 +46,13 @@
                             </td>
                             <td class="px-6 py-4">
                                 @if ($u['role'] === 'admin')
-                                    <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
                                         Admin
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-100">
+                                    <span
+                                        class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-100">
                                         Staf
                                     </span>
                                 @endif
@@ -57,13 +62,32 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="flex items-center justify-center gap-3">
-                                    <a href="{{ route('admin.users.edit', $u['id']) }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 transition-colors">Edit</a>
-                                    <span class="text-gray-200">|</span>
-                                    <form action="{{ route('admin.users.destroy', $u['id']) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')" class="inline">
+                                    <a href="{{ route('admin.users.edit', $u['id']) }}"
+                                        class="p-2.5 bg-gray-50 hover:bg-emerald-600 hover:text-white rounded-xl transition-all duration-200 text-gray-600 border border-gray-100 hover:border-emerald-600 shadow-sm"
+                                        title="Edit Pengguna">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </a>
+
+                                    {{-- Tombol Hapus (Menggunakan Form Berwarna Merah/Rose) --}}
+                                    <form action="{{ route('admin.users.destroy', $u['id']) }}" method="POST"
+                                        class="inline"
+                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna {{ $u['name'] }}?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-xs font-bold text-red-600 hover:text-red-700 transition-colors">
-                                            Hapus
+                                        <button type="submit"
+                                            class="p-2.5 bg-rose-200 hover:bg-rose-600 hover:text-white rounded-xl transition-all duration-200 text-gray-600 border border-gray-100 hover:border-rose-600 shadow-sm"
+                                            title="Hapus">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
                                         </button>
                                     </form>
                                 </div>

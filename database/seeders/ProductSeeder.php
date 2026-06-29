@@ -22,7 +22,7 @@ class ProductSeeder extends Seeder
             ['kategori' => 'Minuman', 'nama_barang' => 'Kopi Susu Kemasan', 'harga' => 9000, 'stok' => 100],
             ['kategori' => 'Makanan', 'nama_barang' => 'Roti Tawar', 'harga' => 15000, 'stok' => 40],
             ['kategori' => 'Makanan', 'nama_barang' => 'Mie Instan', 'harga' => 3500, 'stok' => 300],
-            ['kategori' => 'ATK', 'nama_barang' => 'Buku Tulis 38 Lembar', 'harga' => 5000, 'stok' => 120],
+            ['kategori' => 'ATK', 'nama_barang' => 'Buku Tulis 38 Lembar', 'harga' => 5000, 'stok' => 3],
             ['kategori' => 'ATK', 'nama_barang' => 'Pulpen Standar', 'harga' => 2500, 'stok' => 250],
         ];
 
