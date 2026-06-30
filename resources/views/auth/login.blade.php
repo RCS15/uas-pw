@@ -14,7 +14,7 @@
         @csrf
         {{-- Username/Email Input --}}
         <div>
-            <label for="email" class="block text-xs font-semibold text-gray-600 mb-1.5">Alamat Email</label>
+            {{-- <label for="email" class="block text-xs font-semibold text-gray-600 mb-1.5">Alamat Email</label> --}}
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -26,7 +26,7 @@
                 </span>
                 <input type="email" name="email" id="email" value="{{ old('email') }}" required
                     class="block w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 rounded-xl text-sm transition-all duration-150 text-gray-800"
-                    placeholder="nama@email.com">
+                    placeholder="Masukan Email" autofocus>
             </div>
             @error('email')
                 <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
@@ -35,9 +35,9 @@
 
         {{-- Password Input --}}
         <div>
-            <div class="flex justify-between items-center mb-1.5">
+            {{-- <div class="flex justify-between items-center mb-1.5">
                 <label for="password" class="block text-xs font-semibold text-gray-600">Kata Sandi</label>
-            </div>
+            </div> --}}
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -49,7 +49,7 @@
                 </span>
                 <input type="password" name="password" id="password" required
                     class="block w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 rounded-xl text-sm transition-all duration-150 text-gray-800"
-                    placeholder="••••••••">
+                    placeholder="Masukan Password">
             </div>
             @error('password')
                 <p class="text-xs text-red-600 mt-1">{{ $message }}</p>

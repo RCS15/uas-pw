@@ -14,16 +14,24 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         $products = [
-            ['kategori' => 'Elektronik', 'nama_barang' => 'Kabel Data USB-C', 'harga' => 35000, 'stok' => 50],
-            ['kategori' => 'Elektronik', 'nama_barang' => 'Powerbank 10000mAh', 'harga' => 175000, 'stok' => 20],
-            ['kategori' => 'Elektronik', 'nama_barang' => 'Earphone Kabel', 'harga' => 45000, 'stok' => 35],
-            ['kategori' => 'Minuman', 'nama_barang' => 'Air Mineral 600ml', 'harga' => 4000, 'stok' => 200],
-            ['kategori' => 'Minuman', 'nama_barang' => 'Teh Botol 450ml', 'harga' => 6500, 'stok' => 150],
-            ['kategori' => 'Minuman', 'nama_barang' => 'Kopi Susu Kemasan', 'harga' => 9000, 'stok' => 100],
-            ['kategori' => 'Makanan', 'nama_barang' => 'Roti Tawar', 'harga' => 15000, 'stok' => 40],
-            ['kategori' => 'Makanan', 'nama_barang' => 'Mie Instan', 'harga' => 3500, 'stok' => 300],
-            ['kategori' => 'ATK', 'nama_barang' => 'Buku Tulis 38 Lembar', 'harga' => 5000, 'stok' => 3],
-            ['kategori' => 'ATK', 'nama_barang' => 'Pulpen Standar', 'harga' => 2500, 'stok' => 250],
+            // Kategori: Singkong
+            ['kategori' => 'Singkong', 'nama_barang' => 'Keripik Singkong Original (100g)', 'harga' => 10000, 'stok' => 45],
+            ['kategori' => 'Singkong', 'nama_barang' => 'Keripik Singkong Balado Pedas (150g)', 'harga' => 13000, 'stok' => 30],
+            ['kategori' => 'Singkong', 'nama_barang' => 'Keripik Singkong Barbeque (150g)', 'harga' => 13000, 'stok' => 25],
+            ['kategori' => 'Singkong', 'nama_barang' => 'Singkong Karatan / Bal-balan (1kg)', 'harga' => 65000, 'stok' => 4],
+
+            // Kategori: Pisang
+            ['kategori' => 'Pisang', 'nama_barang' => 'Keripik Pisang Manis Klasik (120g)', 'harga' => 12000, 'stok' => 40],
+            ['kategori' => 'Pisang', 'nama_barang' => 'Keripik Pisang Gurih Asin (120g)', 'harga' => 12000, 'stok' => 35],
+            ['kategori' => 'Pisang', 'nama_barang' => 'Keripik Pisang Cokelat Lumer (200g)', 'harga' => 18000, 'stok' => 20],
+
+            // Kategori: Ubi
+            ['kategori' => 'Ubi', 'nama_barang' => 'Keripik Ubi Ungu Manis (100g)', 'harga' => 11000, 'stok' => 30],
+            ['kategori' => 'Ubi', 'nama_barang' => 'Keripik Ubi Madu Renyah (100g)', 'harga' => 11000, 'stok' => 2],
+
+            // Kategori: Kentang
+            ['kategori' => 'Kentang', 'nama_barang' => 'Keripik Kentang Original Salted (80g)', 'harga' => 15000, 'stok' => 20],
+            ['kategori' => 'Kentang', 'nama_barang' => 'Keripik Kentang Mustofa Pedas (250g)', 'harga' => 35000, 'stok' => 15],
         ];
 
         foreach ($products as $product) {

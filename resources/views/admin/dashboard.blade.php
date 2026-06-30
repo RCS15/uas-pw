@@ -4,7 +4,7 @@
 @section('header_title', 'Dashboard Admin')
 
 @section('content')
-    <!-- Welcome Header Section -->
+
     <!-- Welcome Header + Filter Section -->
     <div class="mb-6 flex flex-col gap-4">
         {{-- Baris 1: Judul & Tombol Transaksi --}}
@@ -83,7 +83,6 @@
     </div>
 
     <!-- KPI Cards Grid -->
-    <!-- KPI Cards Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 
         {{-- Modal Usaha --}}
@@ -142,33 +141,6 @@
             </div>
         </div>
 
-        {{-- Total Penjualan Hari Ini --}}
-        <div
-            class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Penjualan Hari ini</span>
-                <span class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </span>
-            </div>
-            <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-bold text-gray-900">
-                    Rp {{ number_format($pemasukan_hari_ini, 0, ',', '.') }}
-                </span>
-            </div>
-            <div class="mt-2 text-xs font-medium text-emerald-600 flex items-center gap-1">
-                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                        clip-rule="evenodd" />
-                </svg>
-                <span>{{ now()->translatedFormat('d F Y') }}</span>
-            </div>
-        </div>
-
         {{-- Total Pengeluaran --}}
         <div
             class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
@@ -196,6 +168,79 @@
             </div>
         </div>
 
+        {{-- Total Penjualan Hari Ini --}}
+        <div
+            class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Penjualan
+                    {{ $periodLabel }}</span>
+                <span class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-2xl font-bold text-gray-900">
+                    Rp {{ number_format($pemasukan_hari_ini, 0, ',', '.') }}
+                </span>
+            </div>
+            <div class="mt-2 text-xs font-medium text-emerald-600 flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                        clip-rule="evenodd" />
+                </svg>
+                <span>{{ now()->translatedFormat('d F Y') }}</span>
+            </div>
+        </div>
+
+        {{-- Total Transaksi Penjualan --}}
+        <div
+            class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Nota Penjualan
+                    {{ $periodLabel }}</span>
+                <span class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                    </svg>
+                </span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-2xl font-bold text-gray-900">{{ $total_transaksi_penjualan }}</span>
+                <span class="text-sm text-gray-400">Nota penjualan</span>
+            </div>
+            <div class="mt-2 text-xs font-medium text-sky-600 flex items-center gap-1">
+                <span>Transaksi Penjualan {{ $periodLabel }}</span>
+            </div>
+        </div>
+
+        {{-- Total Transaksi --}}
+        <div
+            class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Nota Transaksi
+                    {{ $periodLabel }}</span>
+                <span class="p-2.5 bg-amber-50 text-amber-600 rounded-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-2xl font-bold text-gray-900">{{ $total_transaksi }}</span>
+                <span class="text-sm text-gray-400">Nota transaksi</span>
+            </div>
+            <div
+                class="mt-2 text-xs font-medium {{ $low_stock_count > 0 ? 'text-amber-600' : 'text-emerald-600' }} flex items-center gap-1">
+                <span>{{ $low_stock_count > 0 ? $low_stock_count . ' produk stok rendah' : 'Semua stok aman' }}</span>
+            </div>
+        </div>
 
         {{-- Saldo Bersih --}}
         <div
@@ -225,25 +270,46 @@
             </div>
         </div>
 
-        {{-- Total Transaksi --}}
+        {{-- Total Produk --}}
         <div
             class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Transaksi</span>
-                <span class="p-2.5 bg-amber-50 text-amber-600 rounded-xl">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Produk</span>
+                <span class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                 </span>
             </div>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-bold text-gray-900">{{ $total_transaksi }}</span>
-                <span class="text-sm text-gray-400">transaksi</span>
+                <span class="text-2xl font-bold text-gray-900">{{ $total_produk }}</span>
+                <span class="text-sm text-gray-400">item</span>
             </div>
-            <div
-                class="mt-2 text-xs font-medium {{ $low_stock_count > 0 ? 'text-amber-600' : 'text-emerald-600' }} flex items-center gap-1">
-                <span>{{ $low_stock_count > 0 ? $low_stock_count . ' produk stok rendah' : 'Semua stok aman' }}</span>
+            <div class="mt-2 text-xs font-medium text-indigo-600 flex items-center gap-1">
+                <span>Total katalog produk</span>
+            </div>
+        </div>
+
+        {{-- Rata-Rata Penjualan --}}
+        <div
+            class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Rata-rata Penjualan</span>
+                <span class="p-2.5 bg-fuchsia-50 text-fuchsia-600 rounded-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-2xl font-bold text-gray-900">Rp
+                    {{ number_format($rata_rata_penjualan, 0, ',', '.') }}</span>
+            </div>
+            <div class="mt-2 text-xs font-medium text-fuchsia-600 flex items-center gap-1">
+                <span>Nilai rata-rata per transaksi</span>
             </div>
         </div>
 
@@ -252,11 +318,11 @@
 
     <!-- Chart and Quick Actions Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {{-- Revenue Trends Chart --}}
+        {{-- Financial Trends Chart --}}
         <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 lg:col-span-2">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                 <div>
-                    <h3 class="text-base font-bold text-gray-900 mb-1">Tren Pendapatan</h3>
+                    <h3 class="text-base font-bold text-gray-900 mb-1">Tren Keuangan</h3>
                     <p class="text-xs text-gray-500">
                         @php
                             switch ($activePeriod) {
@@ -279,6 +345,21 @@
                         @endphp
                     </p>
                 </div>
+                <!-- Legend -->
+                <div class="flex items-center gap-4 text-xs font-semibold">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                        <span class="text-gray-600">Pendapatan</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                        <span class="text-gray-600">Pengeluaran</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                        <span class="text-gray-600">Laba Bersih</span>
+                    </div>
+                </div>
             </div>
 
             {{-- SVG Chart Placeholder --}}
@@ -293,16 +374,36 @@
                 <!-- Custom SVG Graph representing dynamic trends -->
                 <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
                     <defs>
-                        <linearGradient id="gradient-chart" x1="0" y1="0" x2="0"
+                        <linearGradient id="gradient-income" x1="0" y1="0" x2="0"
                             y2="1">
                             <stop offset="0%" stop-color="#10b981" stop-opacity="0.2" />
                             <stop offset="100%" stop-color="#10b981" stop-opacity="0.0" />
                         </linearGradient>
+                        <linearGradient id="gradient-expense" x1="0" y1="0" x2="0"
+                            y2="1">
+                            <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.2" />
+                            <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.0" />
+                        </linearGradient>
+                        <linearGradient id="gradient-profit" x1="0" y1="0" x2="0"
+                            y2="1">
+                            <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.2" />
+                            <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0" />
+                        </linearGradient>
                     </defs>
-                    <!-- Area Path -->
-                    <path d="{{ $areaPathD }}" fill="url(#gradient-chart)"></path>
-                    <!-- Line Path -->
-                    <path d="{{ $pathD }}" fill="none" stroke="#10b981" stroke-width="1.5"
+
+                    <!-- Laba Bersih -->
+                    <path d="{{ $areaPathD_profit }}" fill="url(#gradient-profit)"></path>
+                    <path d="{{ $pathD_profit }}" fill="none" stroke="#3b82f6" stroke-width="1.5"
+                        stroke-linecap="round"></path>
+
+                    <!-- Pengeluaran -->
+                    <path d="{{ $areaPathD_expense }}" fill="url(#gradient-expense)"></path>
+                    <path d="{{ $pathD_expense }}" fill="none" stroke="#f43f5e" stroke-width="1.5"
+                        stroke-linecap="round"></path>
+
+                    <!-- Pendapatan -->
+                    <path d="{{ $areaPathD_income }}" fill="url(#gradient-income)"></path>
+                    <path d="{{ $pathD_income }}" fill="none" stroke="#10b981" stroke-width="1.5"
                         stroke-linecap="round"></path>
                 </svg>
 
@@ -400,12 +501,12 @@
                     <thead>
                         <tr
                             class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100">
-                            <th class="px-6 py-4">ID</th>
-                            <th class="px-6 py-4">User</th>
-                            <th class="px-6 py-4">Waktu - Tanggal</th>
-                            <th class="px-6 py-4">Deskripsi</th>
-                            <th class="px-6 py-4">Tipe</th>
-                            <th class="px-6 py-4 text-right">Jumlah</th>
+                            <th class="px-6 py-4 text-center">ID</th>
+                            <th class="px-6 py-4 text-center">User</th>
+                            <th class="px-6 py-4 text-center">Waktu - Tanggal</th>
+                            <th class="px-6 py-4 text-center">Deskripsi</th>
+                            <th class="px-6 py-4 text-center">Tipe</th>
+                            <th class="px-6 py-4 text-center">Jumlah</th>
                             <th class="px-6 py-4 text-center">Aksi</th>
                         </tr>
                     </thead>

@@ -144,9 +144,10 @@
 
                 {{-- Laba Kotor --}}
                 <div class="flex justify-between items-center text-sm font-bold text-gray-700">
-                    <span>LABA KOTOR (GROSS PROFIT) <span
-                            class="text-[10px] font-normal text-gray-400 ml-2 hidden sm:inline-block">*Penjualan -
-                            Pembelian</span></span>
+                    <span>
+                        LABA KOTOR (GROSS PROFIT)
+                        <span class="text-[10px] font-normal text-gray-400 ml-2 hidden sm:inline-block">
+                        </span></span>
                     <span class="{{ $laba_kotor >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">
                         Rp {{ number_format($laba_kotor, 0, ',', '.') }}
                     </span>
