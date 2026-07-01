@@ -76,6 +76,7 @@ Route::prefix('finbiz')->name('nonadmin.')->middleware(['auth', 'role:nonadmin']
     Route::get('/transactions/create', [NonAdminTransactionsController::class, 'create'])->name('transactions.create');
     Route::post('/transactions', [NonAdminTransactionsController::class, 'store'])->name('transactions.store');
     Route::get('/transactions/history', [NonAdminTransactionsController::class, 'history'])->name('transactions.history');
+    Route::get('/transactions/{transaction}/print', [NonAdminTransactionsController::class, 'print'])->name('transactions.print');
 
     // Katalog Produk (lihat saja)
     Route::get('/products', [NonAdminProductsController::class, 'index'])->name('products.index');

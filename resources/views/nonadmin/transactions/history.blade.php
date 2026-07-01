@@ -105,7 +105,7 @@
                                 Rp {{ number_format($t->total_harga, 0, ',', '.') }}
                             </td>
                             <td class="px-12 py-4 text-center">
-                                <a href="#"
+                                <a href="{{ route('nonadmin.transactions.print', $t->id) }}"
                                     class="text-xs font-bold text-gray-500 hover:text-emerald-600 border border-gray-200 hover:border-emerald-500 px-3 py-1.5 rounded-lg bg-white transition-all shadow-sm">
                                     Cetak Struk
                                 </a>
@@ -134,5 +134,5 @@
                     class="p-1 px-3 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-400 cursor-not-allowed">Selanjutnya</button>
             </div>
         </div>
-    </div> 
+    </div>
 @endsection

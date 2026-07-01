@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransactionsController extends Controller
 {
@@ -22,6 +23,21 @@ class TransactionsController extends Controller
         return view('nonadmin.transactions.create', [
             'products' => Product::orderBy('nama_barang')->get(),
         ]);
+    }
+
+    /**
+     * Tampilkan struk cetak untuk transaksi tertentu (Format HTML A5).
+     */
+    public function print(Transaction $transaction): View
+    {
+        // Pastikan transaksi ini milik user yang sedang login
+        if ($transaction->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $transaction->load(['details.product', 'user']);
+
+        return view('nonadmin.transactions.print', compact('transaction'));
     }
 
     /**
