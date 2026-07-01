@@ -128,7 +128,7 @@
             </div>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-bold text-gray-900">
-                    Rp {{ number_format($total_pendapatan, 0, ',', '.') }}
+                    Rp {{ number_format($total_pemasukan, 0, ',', '.') }}
                 </span>
             </div>
             <div class="mt-2 text-xs font-medium text-emerald-600 flex items-center gap-1">
@@ -137,7 +137,7 @@
                         d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
                         clip-rule="evenodd" />
                 </svg>
-                <span>Seluruh pemasukan tercatat</span>
+                <span>Pemasukan {{ $periodLabel }}</span>
             </div>
         </div>
 
@@ -164,11 +164,11 @@
                         d="M12 13a1 1 0 100 2h5a1 1 0 001-1V9a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586 3.707 5.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z"
                         clip-rule="evenodd" />
                 </svg>
-                <span>Seluruh pengeluaran tercatat</span>
+                <span>Pengeluaran {{ $periodLabel }}</span>
             </div>
         </div>
 
-        {{-- Total Penjualan Hari Ini --}}
+        {{-- Total Penjualan --}}
         <div
             class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between mb-4">
@@ -183,7 +183,7 @@
             </div>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-bold text-gray-900">
-                    Rp {{ number_format($pemasukan_hari_ini, 0, ',', '.') }}
+                    Rp {{ number_format($total_penjualan, 0, ',', '.') }}
                 </span>
             </div>
             <div class="mt-2 text-xs font-medium text-emerald-600 flex items-center gap-1">
@@ -196,7 +196,7 @@
             </div>
         </div>
 
-        {{-- Total Transaksi Penjualan --}}
+        {{-- Total Nota Penjualan --}}
         <div
             class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm shadow-gray-200/20 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between mb-4">
@@ -211,7 +211,7 @@
                 </span>
             </div>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-bold text-gray-900">{{ $total_transaksi_penjualan }}</span>
+                <span class="text-2xl font-bold text-gray-900">{{ $total_nota_penjualan }}</span>
                 <span class="text-sm text-gray-400">Nota penjualan</span>
             </div>
             <div class="mt-2 text-xs font-medium text-sky-600 flex items-center gap-1">
@@ -233,12 +233,11 @@
                 </span>
             </div>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-bold text-gray-900">{{ $total_transaksi }}</span>
+                <span class="text-2xl font-bold text-gray-900">{{ $total_nota_transaksi }}</span>
                 <span class="text-sm text-gray-400">Nota transaksi</span>
             </div>
-            <div
-                class="mt-2 text-xs font-medium {{ $low_stock_count > 0 ? 'text-amber-600' : 'text-emerald-600' }} flex items-center gap-1">
-                <span>{{ $low_stock_count > 0 ? $low_stock_count . ' produk stok rendah' : 'Semua stok aman' }}</span>
+            <div class="mt-2 text-xs font-medium text-amber-600 flex items-center gap-1">
+                <span>Seluruh Nota Pengeluaran dan Pemasukan</span>
             </div>
         </div>
 
@@ -287,8 +286,10 @@
                 <span class="text-2xl font-bold text-gray-900">{{ $total_produk }}</span>
                 <span class="text-sm text-gray-400">item</span>
             </div>
-            <div class="mt-2 text-xs font-medium text-indigo-600 flex items-center gap-1">
-                <span>Total katalog produk</span>
+            <div class="mt-2 text-xs font-medium flex items-center gap-1">
+                <span class="{{ $low_stock_count > 0 ? 'text-rose-600' : 'text-emerald-600' }}">
+                    {{ $low_stock_count > 0 ? $low_stock_count . ' produk stok rendah' : 'Semua stok aman' }}
+                </span>
             </div>
         </div>
 

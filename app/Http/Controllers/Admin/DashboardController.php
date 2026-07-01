@@ -16,7 +16,7 @@ class DashboardController extends Controller
         // ── 1. Tentukan Rentang Waktu ─────────────────────────────────────
         $period = $request->input('period', 'bulan_ini');
         $dateStart = null;
-        $dateEnd   = Carbon::today();
+        $dateEnd = Carbon::today();
 
         switch ($period) {
             case 'hari_ini':
@@ -38,27 +38,26 @@ class DashboardController extends Controller
                 break;
             case 'bulan_ini':
             default:
-                $period    = 'bulan_ini';
+                $period = 'bulan_ini';
                 $dateStart = Carbon::now()->startOfMonth();
                 break;
         }
 
         // ── 2. Base Query dengan Filter Tanggal ──────────────────────────
-        $baseQuery = fn() => Transaction::whereBetween('tanggal', [
+        $baseQuery = fn () => Transaction::whereBetween('tanggal', [
             $dateStart->toDateString(),
             $dateEnd->toDateString(),
         ]);
 
         // ── 3. KPI Cards ─────────────────────────────────────────────────
-        $totalPendapatan  = (float) $baseQuery()->where('jenis_transaksi', 'income')->sum('total_harga');
+        $totalPemasukan = (float) $baseQuery()->where('jenis_transaksi', 'income')->sum('total_harga');
         $totalPengeluaran = (float) $baseQuery()->where('jenis_transaksi', 'expense')->sum('total_harga');
-        $labaBersih       = $totalPendapatan - $totalPengeluaran;
-        $totalTransaksi   = $baseQuery()->count();
-        $totalTransaksiPenjualan = $baseQuery()->where('tipe_transaksi', 'penjualan')->count();
+        $labaBersih = $totalPemasukan - $totalPengeluaran;
+        $totalNotaTransaksi = $baseQuery()->count();
+        $totalNotaPenjualan = $baseQuery()->where('tipe_transaksi', 'penjualan')->count();
 
-        // Pemasukan hari ini (selalu hari ini, tidak terpengaruh filter)
-        $pemasukanHariIni = (float) Transaction::where('tipe_transaksi', 'penjualan')
-            ->whereDate('tanggal', Carbon::today())
+        $totalPenjualan = (float) $baseQuery()
+            ->where('tipe_transaksi', 'penjualan')
             ->sum('total_harga');
 
         // Modal usaha (semua waktu, tidak perlu difilter)
@@ -66,8 +65,8 @@ class DashboardController extends Controller
 
         // Tambahan KPI:
         $totalProduk = Product::count();
-        $rataRataPenjualan = $totalTransaksiPenjualan > 0 
-            ? (float) $baseQuery()->where('tipe_transaksi', 'penjualan')->avg('total_harga') 
+        $rataRataPenjualan = $totalNotaPenjualan > 0
+            ? (float) $baseQuery()->where('tipe_transaksi', 'penjualan')->avg('total_harga')
             : 0;
 
         // ── 4. Transaksi Terbaru (5 terbaru dalam periode) ───────────────
@@ -79,12 +78,12 @@ class DashboardController extends Controller
             ->get();
 
         // ── 5. Stok Rendah ────────────────────────────────────────────────
-        $lowStockCount    = Product::where('stok', '<', 10)->count();
+        $lowStockCount = Product::where('stok', '<', 10)->count();
         $lowStockProducts = Product::where('stok', '<', 10)->orderBy('stok', 'asc')->take(5)->get();
 
         // ── 6. Data Grafik (dinamis sesuai periode) ───────────────────────
         [
-            $chartLabels, 
+            $chartLabels,
             $pathD_income, $areaPathD_income,
             $pathD_expense, $areaPathD_expense,
             $pathD_profit, $areaPathD_profit
@@ -92,49 +91,49 @@ class DashboardController extends Controller
 
         // ── 7. Label Periode untuk Tampilan ──────────────────────────────
         $periodLabels = [
-            'hari_ini'   => 'Hari Ini',
+            'hari_ini' => 'Hari Ini',
             'minggu_ini' => 'Minggu Ini',
-            'bulan_ini'  => 'Bulan Ini',
-            'tahun_ini'  => 'Tahun Ini',
-            'custom'     => 'Custom: ' . $dateStart->format('d M Y') . ' – ' . $dateEnd->format('d M Y'),
+            'bulan_ini' => 'Bulan Ini',
+            'tahun_ini' => 'Tahun Ini',
+            'custom' => $dateStart->format('d M Y').' - '.$dateEnd->format('d M Y'),
         ];
 
         return view('admin.dashboard', [
-            'total_pendapatan'    => $totalPendapatan,
-            'total_pengeluaran'   => $totalPengeluaran,
-            'laba_bersih'         => $labaBersih,
-            'total_transaksi'     => $totalTransaksi,
-            'total_transaksi_penjualan' => $totalTransaksiPenjualan,
-            'pemasukan_hari_ini'  => $pemasukanHariIni,
-            'modal_usaha'         => $modalUsaha,
-            'total_produk'        => $totalProduk,
+            'total_pemasukan' => $totalPemasukan,
+            'total_pengeluaran' => $totalPengeluaran,
+            'laba_bersih' => $labaBersih,
+            'total_nota_transaksi' => $totalNotaTransaksi,
+            'total_nota_penjualan' => $totalNotaPenjualan,
+            'total_penjualan' => $totalPenjualan,
+            'modal_usaha' => $modalUsaha,
+            'total_produk' => $totalProduk,
             'rata_rata_penjualan' => $rataRataPenjualan,
             'recent_transactions' => $recentTransactions,
-            'low_stock_count'     => $lowStockCount,
-            'low_stock_products'  => $lowStockProducts,
-            'chartLabels'         => $chartLabels,
-            'pathD_income'        => $pathD_income,
-            'areaPathD_income'    => $areaPathD_income,
-            'pathD_expense'       => $pathD_expense,
-            'areaPathD_expense'   => $areaPathD_expense,
-            'pathD_profit'        => $pathD_profit,
-            'areaPathD_profit'    => $areaPathD_profit,
+            'low_stock_count' => $lowStockCount,
+            'low_stock_products' => $lowStockProducts,
+            'chartLabels' => $chartLabels,
+            'pathD_income' => $pathD_income,
+            'areaPathD_income' => $areaPathD_income,
+            'pathD_expense' => $pathD_expense,
+            'areaPathD_expense' => $areaPathD_expense,
+            'pathD_profit' => $pathD_profit,
+            'areaPathD_profit' => $areaPathD_profit,
             // Filter state
-            'activePeriod'        => $period,
-            'periodLabel'         => $periodLabels[$period] ?? 'Bulan Ini',
-            'dateStart'           => $request->input('date_start', ''),
-            'dateEnd'             => $request->input('date_end', ''),
+            'activePeriod' => $period,
+            'periodLabel' => $periodLabels[$period] ?? 'Bulan Ini',
+            'dateStart' => $request->input('date_start', ''),
+            'dateEnd' => $request->input('date_end', ''),
         ]);
     }
 
     // ── Helper: Bangun Data Grafik ────────────────────────────────────────
     private function buildChartData(string $period, Carbon $dateStart, Carbon $dateEnd): array
     {
-        $chartDataIncome   = [];
-        $chartDataExpense  = [];
-        $chartDataProfit   = [];
+        $chartDataIncome = [];
+        $chartDataExpense = [];
+        $chartDataProfit = [];
         $chartLabels = [];
-        $daysIndo    = [
+        $daysIndo = [
             'Sun' => 'Min', 'Mon' => 'Sen', 'Tue' => 'Sel',
             'Wed' => 'Rab', 'Thu' => 'Kam', 'Fri' => 'Jum', 'Sat' => 'Sab',
         ];
@@ -143,7 +142,7 @@ class DashboardController extends Controller
             // Per jam (0–23)
             for ($h = 0; $h < 24; $h += 3) {
                 $chartLabels[] = sprintf('%02d:00', $h);
-                
+
                 $income = (float) Transaction::where('jenis_transaksi', 'income')
                     ->whereDate('tanggal', Carbon::today())
                     ->whereRaw('HOUR(created_at) >= ? AND HOUR(created_at) < ?', [$h, $h + 3])
@@ -160,9 +159,9 @@ class DashboardController extends Controller
         } elseif ($period === 'minggu_ini') {
             // Per hari (7 hari)
             for ($i = 6; $i >= 0; $i--) {
-                $date          = Carbon::now()->startOfWeek()->addDays(6 - $i);
+                $date = Carbon::now()->startOfWeek()->addDays(6 - $i);
                 $chartLabels[] = $daysIndo[$date->format('D')];
-                
+
                 $income = (float) Transaction::where('jenis_transaksi', 'income')
                     ->whereDate('tanggal', $date->toDateString())
                     ->sum('total_harga');
@@ -176,10 +175,10 @@ class DashboardController extends Controller
             }
         } elseif ($period === 'tahun_ini') {
             // Per bulan (Jan–Des)
-            $bulanIndo = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+            $bulanIndo = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
             for ($m = 1; $m <= 12; $m++) {
                 $chartLabels[] = $bulanIndo[$m - 1];
-                
+
                 $income = (float) Transaction::where('jenis_transaksi', 'income')
                     ->whereYear('tanggal', Carbon::now()->year)
                     ->whereMonth('tanggal', $m)
@@ -199,9 +198,9 @@ class DashboardController extends Controller
             if ($diffDays <= 14) {
                 // Per hari
                 for ($i = 0; $i <= $diffDays; $i++) {
-                    $date          = $dateStart->copy()->addDays($i);
+                    $date = $dateStart->copy()->addDays($i);
                     $chartLabels[] = $date->format('d/m');
-                    
+
                     $income = (float) Transaction::where('jenis_transaksi', 'income')
                         ->whereDate('tanggal', $date->toDateString())
                         ->sum('total_harga');
@@ -217,9 +216,9 @@ class DashboardController extends Controller
                 // Per minggu
                 $cursor = $dateStart->copy()->startOfWeek();
                 while ($cursor->lte($dateEnd)) {
-                    $weekEnd       = $cursor->copy()->endOfWeek();
+                    $weekEnd = $cursor->copy()->endOfWeek();
                     $chartLabels[] = $cursor->format('d/m');
-                    
+
                     $income = (float) Transaction::where('jenis_transaksi', 'income')
                         ->whereBetween('tanggal', [$cursor->toDateString(), $weekEnd->toDateString()])
                         ->sum('total_harga');
@@ -230,7 +229,7 @@ class DashboardController extends Controller
                     $chartDataIncome[] = $income;
                     $chartDataExpense[] = $expense;
                     $chartDataProfit[] = $income - $expense;
-                    
+
                     $cursor->addWeek();
                 }
             }
@@ -238,9 +237,9 @@ class DashboardController extends Controller
             // bulan_ini — per hari dalam bulan berjalan
             $daysInMonth = Carbon::now()->daysInMonth;
             for ($d = 1; $d <= $daysInMonth; $d++) {
-                $date          = Carbon::now()->startOfMonth()->addDays($d - 1);
+                $date = Carbon::now()->startOfMonth()->addDays($d - 1);
                 $chartLabels[] = (string) $d;
-                
+
                 $income = (float) Transaction::where('jenis_transaksi', 'income')
                     ->whereDate('tanggal', $date->toDateString())
                     ->sum('total_harga');
@@ -257,11 +256,13 @@ class DashboardController extends Controller
         // ── Helper Internal: Bangun SVG Path ──────────────────────────────
         // Hitung global min dan max agar semua chart punya skala yang sama
         $allData = array_merge($chartDataIncome, $chartDataExpense, $chartDataProfit);
-        $globalMin = !empty($allData) ? min($allData) : 0;
-        $globalMax = !empty($allData) ? max($allData) : 1;
+        $globalMin = ! empty($allData) ? min($allData) : 0;
+        $globalMax = ! empty($allData) ? max($allData) : 1;
         if ($globalMin == $globalMax) {
             $globalMin = 0;
-            if ($globalMax == 0) $globalMax = 1;
+            if ($globalMax == 0) {
+                $globalMax = 1;
+            }
         }
 
         $buildPath = function ($data) use ($globalMin, $globalMax) {
@@ -272,18 +273,18 @@ class DashboardController extends Controller
                 $range = $range > 0 ? $range : 1;
             }
 
-            $count    = count($data);
-            $points   = [];
+            $count = count($data);
+            $points = [];
 
             foreach ($data as $i => $value) {
                 $x = $count > 1 ? ($i / ($count - 1)) * 100 : 50;
-                
+
                 if ($globalMin >= 0) {
                     $y = 35 - (($value / $range) * 30);
                 } else {
                     $y = 35 - ((($value - $globalMin) / $range) * 30);
                 }
-                
+
                 $points[] = compact('x', 'y');
             }
 
@@ -300,8 +301,8 @@ class DashboardController extends Controller
             if ($globalMin < 0) {
                 $baseY = 35 - (((0 - $globalMin) / $range) * 30);
             }
-            $areaPathD = $pathD . "L 100 {$baseY} L 0 {$baseY} Z";
-            
+            $areaPathD = $pathD."L 100 {$baseY} L 0 {$baseY} Z";
+
             return [$pathD, $areaPathD];
         };
 
@@ -310,10 +311,10 @@ class DashboardController extends Controller
         [$pathD_profit, $areaPathD_profit] = $buildPath($chartDataProfit);
 
         return [
-            $chartLabels, 
+            $chartLabels,
             $pathD_income, $areaPathD_income,
             $pathD_expense, $areaPathD_expense,
-            $pathD_profit, $areaPathD_profit
+            $pathD_profit, $areaPathD_profit,
         ];
     }
 }
